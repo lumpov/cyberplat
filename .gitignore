@@ -1,4 +1,4 @@
-nodemodules
+node_modules
 *.so
 *.a
 *.mk
