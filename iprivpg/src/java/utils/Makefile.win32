@@ -1,0 +1,27 @@
+JNIPATH = "C:\Program Files\Java\jdk1.6.0\include"
+NAME	= jiprivpg.dll
+
+all: jni native_library
+
+jni:
+	javac -encoding utf-8 -d .\objs src\IPriv_native.java src\IPrivException.java src\IPrivKey.java src\IPriv.java
+	javah -classpath .\objs -jni -o IPriv_native.h org.CyberPlat.IPriv_native
+	jar cvf iprivpg.jar -C .\objs org
+
+native_library:
+	cl /DTHREAD_SAFE /I$(JNIPATH) /I$(JNIPATH)\win32 /GD /MT /c /I.. jiprivpg.cpp
+	link /DLL /OUT:$(NAME) /DEF:jiprivpg.def jiprivpg.obj ..\static\libipriv_s.lib user32.lib Advapi32.lib
+	del jiprivpg.exp
+	del jiprivpg.lib
+	del jiprivpg.obj
+
+tests:
+	javac -encoding utf-8 -classpath iprivpg.jar -d .\objs test\test.java
+	java -classpath iprivpg.jar;.\objs test
+
+transact:
+	javac -encoding utf-8 -classpath iprivpg.jar -d .\objs test\transact.java
+	java -classpath iprivpg.jar:.\objs transact
+
+clean:
+	rm -f $(NAME) IPriv_native.h

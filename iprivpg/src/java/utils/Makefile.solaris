@@ -1,0 +1,10 @@
+PLATFORM_FLAGS	= -pthreads -DTHREAD_SAFE
+PLATFORM_LIBS   = -L/usr/local/lib -liconv
+
+include ../config.mk
+
+ifeq ($(OPT_OPENSSL),true)
+PLATFORM_LIBS+=-lcrypto -lssl
+endif
+
+include rules.mk

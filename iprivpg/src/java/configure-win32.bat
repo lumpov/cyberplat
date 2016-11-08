@@ -1,0 +1,1 @@
+copy utils\Makefile.win32 Makefile

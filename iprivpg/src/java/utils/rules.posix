@@ -1,0 +1,29 @@
+CFLAGS	= -fPIC -fno-exceptions -fno-rtti -O2 -I../ -I./ -L../ $(JDK_FLAGS) $(PLATFORM_FLAGS)
+LIBS	= $(PLATFORM_LIBS) -lipriv
+NAME	= libjiprivpg.so
+
+all: jni native_library
+
+native_library:
+	gcc $(CFLAGS) -shared -nostartfiles -o $(NAME) jiprivpg.cpp $(LIBS)
+
+jni:
+	javac -encoding utf-8 -d ./objs src/IPriv_native.java src/IPrivException.java src/IPrivKey.java src/IPriv.java
+	javah -classpath ./objs -jni -o IPriv_native.h org.CyberPlat.IPriv_native
+	jar cvf iprivpg.jar -C ./objs org
+
+tests:
+	javac -encoding utf-8 -classpath iprivpg.jar -d ./objs test/test.java
+	LD_LIBRARY_PATH=`pwd` java -classpath iprivpg.jar:./objs test
+
+stress:
+	javac -encoding utf-8 -classpath iprivpg.jar -d ./objs test/stress_test.java
+	LD_LIBRARY_PATH=`pwd` java -classpath iprivpg.jar:./objs stress_test
+
+transact:
+	javac -encoding utf-8 -classpath iprivpg.jar -d ./objs test/transact.java
+	LD_LIBRARY_PATH=`pwd` java -classpath iprivpg.jar:./objs transact
+
+clean:
+	rm -f $(NAME) rules.mk IPriv_native.h Makefile
+	rm -rf ./objs/*

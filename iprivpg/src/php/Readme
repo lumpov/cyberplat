@@ -1,0 +1,89 @@
+Windows versions is built by MS VS 2005 (phpipriv.sln)
+MS VS 2008 for 5.3 and 5.4
+
+"C:\php-5.2.6\";"C:\php-5.2.6\regex\";"C:\php-5.2.6\TSRM\";"C:\php-5.2.6\Zend";"C:\php-5.2.6\main\";"C:\php-5.2.6\streams";C:\Work\cpplib\iprivpg
+"C:\php-5.3.26-src\";"C:\php-5.3.26-src\TSRM\";"C:\php-5.3.26-src\Zend";"C:\php-5.3.26-src\main\";C:\Work\cpplib\iprivpg
+"C:\php-5.4.16-src\";"C:\php-5.4.16-src\TSRM\";"C:\php-5.4.16-src\Zend";"C:\php-5.4.16-src\main\";C:\Work\cpplib\iprivpg
+
+run in src directory
+buildconf.bat
+cscript /nologo configure.js
+
+5.2	20060613
+5.3	20090626
+5.4	20100525
+
+Linux instructions is in php\phpipriv\phpipriv\Readme file
+
+
+
+
+
+Short description
+=================
+
+See test.php for an example how to use this extension.
+
+1. To sign and verify messages use the following functions
+
+$res = ipriv_sign("Hello world", $sec, $passwd);
+where
+first parameter is message to be signed
+$sec - string with the content of secret.key file
+$passwd- code phrase for this secret key
+
+
+$res = ipriv_verify($res[1], $pub, serial);
+where
+first parameter - signed message that we want to verify
+$pub - string with the content of public.key file
+third parameter is a serial number of specific public key in a file (optional)
+		If omitted function will use a first public key in a file
+
+The result ($res) is an array where the first member is error code,
+If error code is 0 then the second member is the result of an operation.
+if error code is not 0 then the second member is an error message.
+
+
+2. To encrypt/decrypt short string (about 50 symbols long) use following functions
+
+$res = ipriv_encrypt("Hello, world!", $pub, 17033);
+where
+first parameter is a short string that should be encrypted
+$pub	public key of a ricipient
+third parameter is a serial number of specific public key in a file
+
+$res[0] is a length of encrypted string or a negative error code
+$res[1] is encryptede string
+
+$res = ipriv_decrypt($res[1], $sec, $passwd);
+where
+first parameter is anencrypted string
+$sec - string with the content of secret.key file
+$passwd- code phrase for this secret key
+
+$res[0] is a length of decrypted string or a negative error code
+$res[1] is decryptede string
+
+
+3. To make detached signature or verify detached signature use following functions
+
+$res = ipriv_sign2("Hello world", $sec, $passwd);
+where
+first parameter is a message to be signed
+$sec - string with the content of secret.key file
+$passwd- code phrase for this secret key
+
+The result ($res) is an array where the first member is error code,
+If error code is 0 then the second member is the detached signature
+
+
+$res = ipriv_verify2("Hello world", $res[1], $pub, 17033);
+where
+first parameter is a message to be verified
+second parameter is a detached signature
+$pub is a public key
+fourth parameter is a serial number of specific public key in a file
+
+$res[0] contains 0 if the signature verifies and error code otherwise
+

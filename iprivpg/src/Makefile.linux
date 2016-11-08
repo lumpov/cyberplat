@@ -1,0 +1,116 @@
+# Makefile.linux
+# for Linux with gcc version >= 3.x.x
+
+# options
+OPT_WITH_GENKEY         = true
+OPT_WITH_2048           = true
+OPT_DEBUG               = false
+OPT_RSAREF              = true
+OPT_OPENSSL             = false
+
+# http://www.aladdin-rd.ru/support/downloads/21493/
+# http://www.aladdin-rd.ru/upload/iblock/55b/etokenpkiclientlinux50sp1_2009-08-18.zip
+OPT_PKCS11              = false
+
+include config.mk
+
+CC	= gcc
+AR	= ar
+RM	= rm
+LIBNAME	= libipriv
+LINK	= gcc
+FLAGS	+= -O2 -Iidea -I. -DIDEA32 -fno-stack-protector -fPIC -Irfc6234
+LIBS	= -ldl
+
+OBJS	= rsaref/rsa.o rsaref/nn.o rsaref/digit.o rsaref/r_stdlib.o rsaref/prime.o rsaref/r_random.o \
+		rsaref/r_keygen.o idea/idea.o armor.o \
+		i_stdlib.o ipriv.o keycard.o libipriv.o memfile.o packet.o radix64.o rfc6234/sha256.o
+
+ifeq ($(OPT_RSAREF),true)
+FLAGS+=-DWITH_RSAREF -Irsaref
+OBJS+=eng_rsaref.o
+endif
+
+ifeq ($(OPT_OPENSSL),true)
+FLAGS+=-DWITH_OPENSSL
+LIBS+=-lcrypto -lssl
+OBJS+=eng_openssl.o
+else
+OBJS+=md5/md5c.o
+FLAGS+=-Imd5
+endif
+
+ifeq ($(OPT_PKCS11),true)
+FLAGS+=-DWITH_PKCS11 -Iopencryptoki
+OBJS+=eng_pkcs11.o eng_pkcs11_p.o eng_pkcs11_rutoken.o
+endif
+
+ifeq ($(OPT_WITH_GENKEY),false)
+FLAGS+=-DWITHOUT_KEYGEN
+endif
+
+ifeq ($(OPT_DEBUG),true)
+FLAGS+=-D__DEBUG
+endif
+
+ifeq ($(OPT_WITH_2048),true)
+FLAGS+=-DWITH_2048_KEYS
+endif
+
+CFLAGS	= -x c $(FLAGS)
+CPPFLAGS= -fno-exceptions -fno-rtti $(FLAGS)
+
+
+all: static
+
+static: $(OBJS)
+	$(AR) -cr $(LIBNAME).a $(OBJS)
+	$(RM) $(OBJS)
+
+shared: $(OBJS)
+	$(LINK) -shared -o $(LIBNAME).so $(OBJS) $(LIBS)
+	$(RM) $(OBJS)
+
+.c.o:
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+.cpp.o:
+	$(CC) -c $(CPPFLAGS) -o $@ $<
+
+tests:
+	$(CC) $(CPPFLAGS) -o test/test test.cpp libipriv.a $(LIBS)
+	cd test; ./test
+	cd test; $(RM) Kapi17032_gen.dat 
+	cd test; $(RM) pubkeys_exp.key 
+#	cd test; $(RM) public_2048.key 
+	cd test; $(RM) public_1024.key 
+	cd test; $(RM) public_512.key 
+#	cd test; $(RM) secret_2048.key 
+	cd test; $(RM) secret_1024.key 
+	cd test; $(RM) secret_512.key 
+	cd test; $(RM) secret_exp.key 
+	cd test; $(RM) msg_512.txt
+	cd test; $(RM) msg_1024.txt
+#	cd test; $(RM) msg_2048.txt
+	cd test; $(RM) test
+
+tests_pkcs11:
+	$(CC) $(CPPFLAGS) -o test/test test_pkcs11.cpp libipriv.a $(LIBS)
+	cd test; ./test
+	cd test; $(RM) Kapi17032_gen.dat 
+	cd test; $(RM) public_512.key 
+	cd test; $(RM) msg_512.txt
+	cd test; $(RM) msg.txt
+	cd test; $(RM) test
+
+verify:
+	gcc -fno-rtti -fno-exceptions -I. -L. -o verify verify.cpp -lreadline -lipriv $(LIBS)
+
+checker:
+	g++ -I. -L. -o checker checker.cpp -lipriv -lcrypto -lssl
+
+genkey:
+	gcc -fno-rtti -fno-exceptions -I. -L. -o genkey genkey.cpp -lipriv $(LIBS)
+
+benchmark:
+	g++ -o bench -pthread -L. benchmark.cpp -lipriv -lcrypto -lssl

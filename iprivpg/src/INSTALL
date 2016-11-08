@@ -1,0 +1,106 @@
+How to build ipriv library on Unix
+
+Prerequisites:
+You should have build-essential package installed
+For Java install some JDK package
+For PHP install php5-dev. Instructions for PHP extension build is in php\phpipriv\phpipriv\Readme file
+
+
+Linux: static
+=========================================
+
+- ./configure.sh
+- make -f Makefile.linux
+- make -f Makefile.linux tests
+
+
+Linux: shared
+=========================================
+
+- ./configure.sh
+- make -f Makefile.linux shared
+
+
+Linux: Java Native Interface
+=========================================
+
+- ./configure.sh
+- make -f Makefile.linux
+- make -f Makefile.linux tests
+- cd java
+- ./configure-linux.sh
+- make
+- make tests
+
+
+FreeBSD: static
+=========================================
+
+- ./configure.sh
+- make -f Makefile.bsd
+- make -f Makefile.bsd tests
+
+
+FreeBSD: shared
+=========================================
+
+- ./configure.sh
+- make -f Makefile.bsd shared
+
+
+FreeBSD: Java Native Interface
+=========================================
+
+- ./configure.sh
+- make -f Makefile.bsd
+- make -f Makefile.bsd tests
+- cd java
+- ./configure-freebsd.sh
+- make
+- make tests
+
+
+OpenSolaris: static
+=========================================
+
+- ./configure.sh
+- gmake -f Makefile.solaris
+- gmake -f Makefile.solaris tests
+
+
+OpenSolaris: shared
+=========================================
+
+- ./configure.sh
+- gmake -f Makefile.solaris shared
+
+
+OpenSolaris: Java Native Interface
+=========================================
+
+- ./configure.sh
+- gmake -f Makefile.solaris
+- gmake -f Makefile.solaris tests
+- cd java
+- ./configure-solaris.sh
+- gmake
+- gmake tests
+
+
+MacOS: static
+=========================================
+
+- ./configure.sh
+- make -f Makefile.macos
+- make -f Makefile.macos tests
+
+MacOS: Java Native Interface
+=========================================
+
+- ./configure.sh
+- make -f Makefile.macos
+- make -f Makefile.macos tests
+- cd java
+- ./configure-macos.sh
+- make
+- make tests

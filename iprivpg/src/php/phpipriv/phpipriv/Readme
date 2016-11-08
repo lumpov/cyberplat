@@ -1,0 +1,60 @@
+building PHP extension for Unix
+
+phpize
+./configure --enable-ipriv
+
+then edit generated Makefile. Add " ../../../libipriv.a" to the last line, e.g.
+	$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_ipriv) $(IPRIV_SHARED_LIBADD) ../../../libipriv.a
+or change LDFLAGS to:
+LDFLAGS = -L../../../ -lipriv
+
+
+make
+sudo make install
+
+
+You can check that this extensions is working correctly
+cd ../../
+php -d"extension=ipriv.so" test.php
+
+it should output something like
+
+
+
+Sign: 0
+
+result:
+0000027201SM000000110000001100000125
+api17032            00017033
+                    00000000
+BEGIN
+Hello world
+END
+BEGIN SIGNATURE
+iQBRAwkBAABCiVGoQvgBAT9CAgClSZnQPlUaPV2DPSuADEi4rveSIW0MoqqQNb9m
+ABXnWSLJDr/GRtlGCyVl4lNdtLpwJSzqwnA02hkrzj69nLHcsAHH
+=DzWE
+END SIGNATURE
+
+Verify: 0
+
+result:
+Hello world
+-----------------------
+Encrypt: 128
+
+result:19c54098e74a174c6672ca59f6867c7c43917faf9c57bc8cf606d8b37fafa3e4f50c10af27dd9a3fbf10998d45f4fd6670ae54c67f071ec6d124994604f29b35
+
+Decrypt: 13
+
+result:Hello, world!
+-----------------------
+Sign2: 0
+
+result:
+iQBRAwkBAABCiVGoQvgBAT9CAgClSZnQPlUaPV2DPSuADEi4rveSIW0MoqqQNb9m
+ABXnWSLJDr/GRtlGCyVl4lNdtLpwJSzqwnA02hkrzj69nLHcsAHH
+=DzWE
+
+Verify2: 0
+-----------------------

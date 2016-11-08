@@ -1,0 +1,10 @@
+PLATFORM_FLAGS	= -I/usr/local/include -L/usr/local/lib -pthread -DTHREAD_SAFE -D_FREEBSD
+PLATFORM_LIBS	= -liconv
+
+.include "../config.mk"
+
+.if $(OPT_OPENSSL) == true
+PLATFORM_LIBS+=-lssl
+.endif
+
+.include "rules.mk"

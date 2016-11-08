@@ -1,0 +1,8 @@
+ipriv.lo: /home/koltsov/dev/shocker/iprivpg/php/phpipriv/phpipriv/ipriv.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/home/koltsov/dev/shocker/iprivpg/php/phpipriv/phpipriv $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /home/koltsov/dev/shocker/iprivpg/php/phpipriv/phpipriv/ipriv.c -o ipriv.lo 
+$(phplibdir)/ipriv.la: ./ipriv.la
+	$(LIBTOOL) --mode=install cp ./ipriv.la $(phplibdir)
+
+./ipriv.la: $(shared_objects_ipriv) $(IPRIV_SHARED_DEPENDENCIES)
+	$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_ipriv) $(IPRIV_SHARED_LIBADD)
+

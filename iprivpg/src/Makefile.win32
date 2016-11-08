@@ -1,0 +1,214 @@
+# options
+OPT_OPENSSL		= false		# enable openssl engine
+OPT_RSAREF		= true		# enable RSAREF engine
+OPT_PKCS11		= false		# enable PKCS11 eToken engine
+OPT_PKCS11_RUTOKEN	= false		# enable PKCS11 RuToken engine
+OPT_WINCRYPT		= false		# enable WinCrypt API engine
+OPT_SENSELOCK		= false		# enable SenseLock  engine
+OPT_MT			= true		# /MT or /MD
+OPT_RSAREF_GENKEY	= false		# force RSAREF engine keygen for win32
+OPT_WITH_GENKEY		= true		# enable genkey
+OPT_WITH_2048		= true		# enable 2048 bit keys
+OPT_EXCEPTIONS		= true
+OPT_DEBUG		= false
+
+MAKE= nmake -fMakefile.win32
+CC	= cl
+AR	= lib
+RM	= del
+LINK	= link
+OPENSSL	= c:\openssl
+
+C_FLAGS	= /W3 /Iidea /Irfc6234 /I. /DIDEA32 /D_CRT_SECURE_NO_WARNINGS
+
+OBJS = rsaref\rsa.obj rsaref\nn.obj rsaref\digit.obj rsaref\r_stdlib.obj rsaref\prime.obj rsaref\r_random.obj \
+		rsaref\r_keygen.obj idea\idea.obj armor.obj \
+		i_stdlib.obj ipriv.obj keycard.obj libipriv.obj memfile.obj packet.obj radix64.obj \
+		rfc6234\sha256.obj
+LIBS	= Advapi32.lib
+	
+!if "$(OPT_WINCRYPT)" == "true"
+OPT_RSAREF		= true		# нужен для подсчета недостающих чисел
+!endif
+
+!if "$(OPT_OPENSSL)" == "true"
+C_FLAGS=$(C_FLAGS) /DWITH_OPENSSL /I$(OPENSSL)\include
+LIBS=$(LIBS) $(OPENSSL)\lib\libeay32.lib $(OPENSSL)\lib\ssleay32.lib gdi32.lib
+OBJS=$(OBJS) eng_openssl.obj
+LIB_NAME_SSL=_ssl
+!else
+C_FLAGS=$(C_FLAGS) /Imd5
+OBJS=$(OBJS) md5\md5c.obj
+!endif
+
+!if "$(OPT_RSAREF)" == "true"
+C_FLAGS=$(C_FLAGS) /DWITH_RSAREF /Irsaref
+OBJS=$(OBJS) eng_rsaref.obj
+!endif
+
+!if "$(OPT_PKCS11)" == "true"
+C_FLAGS=$(C_FLAGS) /DWITH_PKCS11 /Ipkcs11
+OBJS=$(OBJS) eng_pkcs11.obj eng_pkcs11_p.obj
+!endif
+
+!if "$(OPT_PKCS11_RUTOKEN)" == "true"
+C_FLAGS=$(C_FLAGS) /DWITH_PKCS11_RUTOKEN /Ipkcs11 /Irutoken
+OBJS=$(OBJS) eng_pkcs11_rutoken.obj eng_pkcs11_p.obj
+!endif
+
+!if "$(OPT_WINCRYPT)" == "true"
+C_FLAGS=$(C_FLAGS) /DWITH_WINCRYPT
+OBJS=$(OBJS) eng_wincrypt.obj
+!endif
+
+!if "$(OPT_SENSELOCK)" == "true"
+C_FLAGS=$(C_FLAGS) /DWITH_SENSELOCK /Isenselock
+LIBS=$(LIBS) senselock\sense4.lib
+OBJS=$(OBJS) eng_senselock.obj
+!endif
+
+!if "$(OPT_RSAREF_GENKEY)" == "true"
+C_FLAGS=$(C_FLAGS) /DWITH_RSAREF_GENKEY
+!endif
+
+!if "$(OPT_EXCEPTIONS)" == "true"
+C_FLAGS=$(C_FLAGS) /DWITH_EXCEPTIONS /EHsc
+!endif
+
+!if "$(OPT_WITH_GENKEY)" == "false"
+C_FLAGS=$(C_FLAGS) /DWITHOUT_KEYGEN
+!endif
+
+!if "$(OPT_DEBUG)" == "true"
+C_FLAGS=$(C_FLAGS) /D__DEBUG /D_DEBUG /Zi
+!endif
+
+!if "$(OPT_WITH_2048)" == "true"
+C_FLAGS=$(C_FLAGS) /DWITH_2048_KEYS
+!endif
+
+!if "$(OPT_MT)" == "true"
+!if "$(OPT_DEBUG)" == "true"
+LIBNAME	= libipriv$(LIB_NAME_SSL)_sd
+CFLAGS	= /MTd $(C_FLAGS)
+!else
+LIBNAME	= libipriv$(LIB_NAME_SSL)_s
+CFLAGS	= /MT /O2 $(C_FLAGS)
+!endif
+!else
+!if "$(OPT_DEBUG)" == "true"
+LIBNAME	= libipriv$(LIB_NAME_SSL)_d
+CFLAGS	= /MDd $(C_FLAGS)
+!else
+LIBNAME	= libipriv$(LIB_NAME_SSL)
+CFLAGS	= /MD /O2 $(C_FLAGS)
+!endif
+!endif
+
+
+default: static tests
+
+all: all2 tests
+
+all2: 
+	$(MAKE) static OPT_DEBUG=false OPT_MT=false
+	$(MAKE) static OPT_DEBUG=false OPT_MT=true
+	$(MAKE) static OPT_DEBUG=true OPT_MT=false
+	$(MAKE) static OPT_DEBUG=true OPT_MT=true
+
+openssl: static tests_openssl
+		
+static: $(OBJS)
+	$(AR) /out:static\$(LIBNAME).lib $(OBJS)
+	$(RM) $(OBJS)
+
+shared: $(OBJS)
+	$(LINK) /DLL /OUT:shared\$(LIBNAME).dll /IMPLIB:shared\$(LIBNAME).lib /DEF:libipriv.def $(OBJS) $(LIBS)
+	$(RM) $(OBJS)
+	$(RM) shared\$(LIBNAME).exp
+
+.c.obj:
+	$(CC) /c /nologo $(CFLAGS) /Fo$@ $<
+
+.cpp.obj:
+	$(CC) /c /nologo $(CFLAGS) /Fo$@ $<
+
+tests:
+	$(CC) $(CFLAGS) /Fetest\test.exe test.cpp static\$(LIBNAME).lib $(LIBS)
+	$(RM) test.obj
+	cd test
+	test.exe
+	$(RM) Kapi17032_gen.dat 
+	$(RM) pubkeys_exp.key 
+#	$(RM) public_2048.key 
+#	$(RM) public_1024.key 
+	$(RM) public_512.key 
+#	$(RM) secret_2048.key 
+#	$(RM) secret_1024.key 
+	$(RM) secret_512.key 
+	$(RM) secret_exp.key 
+	$(RM) msg_512.txt
+	$(RM) msg_1024.txt
+#	$(RM) msg_2048.txt
+	$(RM) msg.txt
+	$(RM) test.exe
+
+tests_pkcs11:
+	$(CC) $(CFLAGS) /Fetest\test_pkcs11.exe test_pkcs11.cpp static\$(LIBNAME).lib $(LIBS)
+	$(RM) test_pkcs11.obj
+	cd test
+	test_pkcs11.exe
+	$(RM) Kapi17032_gen.dat 
+	$(RM) public_512.key 
+#	$(RM) public_1024.key 
+	$(RM) msg_512.txt
+#	$(RM) msg_1024.txt
+	$(RM) msg.txt
+	$(RM) test_pkcs11.exe
+
+tests_openssl:
+	$(CC) $(CFLAGS) /Fetest\test_openssl.exe test_openssl.cpp static\$(LIBNAME).lib $(LIBS)
+	$(RM) test_openssl.obj
+	cd test
+	test_openssl.exe
+	$(RM) Kapi17032_gen.dat 
+	$(RM) pubkeys_exp.key 
+#	$(RM) public_2048.key 
+	$(RM) public_1024.key 
+	$(RM) public_512.key 
+#	$(RM) secret_2048.key 
+	$(RM) secret_1024.key 
+	$(RM) secret_512.key 
+	$(RM) secret_exp.key 
+	$(RM) msg_512.txt
+	$(RM) msg_1024.txt
+#	$(RM) msg_2048.txt
+	$(RM) msg.txt
+	$(RM) test_openssl.exe
+
+tests_wincrypt:
+	$(CC) $(CFLAGS) /Fetest\test_wincrypt.exe test_wincrypt.cpp static\$(LIBNAME).lib $(LIBS)
+	$(RM) test_wincrypt.obj
+	cd test
+	test_wincrypt.exe
+#	$(RM) public_2048.key 
+#	$(RM) public_1024.key 
+#	$(RM) secret_2048.key 
+#	$(RM) secret_1024.key 
+	$(RM) msg_512.txt
+	$(RM) msg_1024.txt
+#	$(RM) msg_2048.txt
+	$(RM) test_wincrypt.exe
+
+tests_senselock:
+	$(CC) $(CFLAGS) /Fetest\test_senselock.exe test_senselock.cpp static\$(LIBNAME).lib $(LIBS)
+	$(RM) test_senselock.obj
+	cd test
+	test_senselock.exe
+	$(RM) test_senselock.exe
+
+load:
+	$(CC) $(CFLAGS) /Fetest\loadtest.exe loadtest.cpp static\libipriv_ssl_s.lib $(LIBS)
+	$(RM) loadtest.obj
+	cd test
+	loadtest.exe 2000
