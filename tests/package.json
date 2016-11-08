@@ -1,0 +1,17 @@
+{
+  "name": "Cyberplat",
+  "version": "0.0.1",
+  "description": "Cyberplat API",
+  "main": "",
+  "dependencies": {
+    "ffi": "*",
+    "ref": "",
+    "ref-struct": ""
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "i@lumpov.ru, serge.dmitriev@gmail.com",
+  "license": "MIT"
+}
