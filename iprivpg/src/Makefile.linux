@@ -92,7 +92,7 @@ tests:
 	cd test; $(RM) msg_512.txt
 	cd test; $(RM) msg_1024.txt
 #	cd test; $(RM) msg_2048.txt
-#	cd test; $(RM) test
+	cd test; $(RM) test
 
 tests_pkcs11:
 	$(CC) $(CPPFLAGS) -o test/test test_pkcs11.cpp libipriv.a $(LIBS)
