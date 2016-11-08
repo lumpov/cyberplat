@@ -1,0 +1,4 @@
+nodemodules
+*.so
+*.a
+*.mk
