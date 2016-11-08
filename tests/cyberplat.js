@@ -64,12 +64,12 @@ ptrIPubKey2.fill(0);
 
 
 //rc=Crypt_OpenSecretKeyFromFile(eng,"secret.key","1111111111",&sec);			// Загрузка собственного закрытого ключа
-rc = libipriv.Crypt_OpenSecretKeyFromFile(eng, 'secret.key', '1111111111', ptrIPrivKey);
+rc = libipriv.Crypt_OpenSecretKeyFromFile(eng, './secret.key', '1111111111', ptrIPrivKey);
 console.log('Crypt_OpenSecretKeyFromFile='+rc);
 console.log('ptrIPrivKey='+JSON.stringify(ptrIPrivKey));
 
 //rc=Crypt_OpenPublicKeyFromFile(eng,"pubkeys.key",17033,&pub1,0);		// Загрузка собственного открытого ключа
-rc = libipriv.Crypt_OpenPublicKeyFromFile(eng, 'pubkeys.key', '17033', ptrIPubKey1, null);
+rc = libipriv.Crypt_OpenPublicKeyFromFile(eng, './pubkeys.key', '17033', ptrIPubKey1, null);
 console.log('Crypt_OpenPublicKeyFromFile='+rc);
 console.log('ptrIPubKey1='+JSON.stringify(ptrIPubKey1));
 
