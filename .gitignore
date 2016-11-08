@@ -1,4 +1,4 @@
 nodemodules
 *.so
 *.a
-*.mk
+config.mk
