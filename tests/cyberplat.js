@@ -37,7 +37,7 @@ var libipriv = ffi.Library('./libipriv', {
   //int IPRIVAPI Crypt_OpenPublicKeyFromFile(int eng,const char* path,unsigned long keyserial,IPRIV_KEY* key,IPRIV_KEY* cakey);
   'Crypt_OpenPublicKeyFromFile': [ 'int', [ 'int', 'string', 'ulong', 'char *', 'char *' ] ],
   //int IPRIVAPI Crypt_Sign(const char* src,int nsrc,char* dst,int ndst,IPRIV_KEY* key);
-  'Crypt_Sign': [ 'int', [ 'string', 'int', 'char *', 'int', 'char *' ] ],
+  'Crypt_Sign': [ 'int', [ 'char *', 'int', 'char *', 'int', 'char *' ] ],
   //int IPRIVAPI Crypt_Verify(const char* src,int nsrc,const char** pdst,int* pndst,IPRIV_KEY* key);
   'Crypt_Verify': [ 'int', [ 'char *', 'int', 'char **', 'int *', 'char *' ]],
   //int IPRIVAPI Crypt_CloseKey(IPRIV_KEY* key);
@@ -52,14 +52,18 @@ rc = libipriv.Crypt_Initialize();
 
 console.log('Crypt_Initialize='+rc);
 
-var buffer = new Buffer(1024);
+const srcbuffer = new Buffer(1024);
+srcbuffer.fill(0);
+srcbuffer.write('hello world!')
+
+const buffer = new Buffer(1024);
 buffer.fill(0);
 
-var ptrIPrivKey = new Buffer(36);
+const ptrIPrivKey = new Buffer(36);
 ptrIPrivKey.fill(0);
-var ptrIPubKey1 = new Buffer(36);
+const ptrIPubKey1 = new Buffer(36);
 ptrIPubKey1.fill(0);
-var ptrIPubKey2 = new Buffer(36);
+const ptrIPubKey2 = new Buffer(36);
 ptrIPubKey2.fill(0);
 
 
@@ -74,7 +78,7 @@ console.log('Crypt_OpenPublicKeyFromFile='+rc);
 console.log('ptrIPubKey1='+JSON.stringify(ptrIPubKey1));
 
 //rc=Crypt_Sign("Hello world",-1,temp,sizeof(temp),&sec);
-rc = libipriv.Crypt_Sign('Hello world', -1, buffer, 1024, ptrIPrivKey);
+rc = libipriv.Crypt_Sign(srcbuffer, -1, buffer, 1024, ptrIPrivKey);
 console.log('Crypt_Sign='+rc);
 console.log('buffer='+buffer);
 
