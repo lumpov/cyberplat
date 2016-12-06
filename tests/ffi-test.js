@@ -33,8 +33,6 @@ var reftypeIPRIV_KEY = ref.refType(structIPRIV_KEY);
 */
 
 
-
-
 describe("ffi test", function () {
   it("check sign using private key", function () {
 
@@ -58,7 +56,7 @@ describe("ffi test", function () {
 
     rc = libipriv.Crypt_Initialize();
     assert.equal(rc, 0);
-    console.log('Crypt_Initialize='+rc);
+    //console.log('Crypt_Initialize='+rc);
 
     const srcbuffer = new Buffer(4096);
     srcbuffer.fill(0);
@@ -72,27 +70,34 @@ describe("ffi test", function () {
 
     const ptrIPubKey1 = new Buffer(32);
   
-
     const bufSecretKeyPath = new Buffer(1024);
     bufSecretKeyPath.fill(0);
     bufSecretKeyPath.write('./tests/secret.key');
 
-    const bufPassword = new Buffer(36);
+    const bufPassword = new Buffer(32);
     bufPassword.fill(0);
     bufPassword.write('1111111111');
-    console.log('bufPassword', bufPassword.toString());
+    //console.log('bufPassword', bufPassword.toString());
 
     rc = libipriv.Crypt_OpenSecretKeyFromFile(engine, bufSecretKeyPath, bufPassword, ptrIPrivKey);
-    console.log('Crypt_OpenSecretKeyFromFile='+rc);
-    console.log('ptrIPrivKey='+JSON.stringify(ptrIPrivKey));
+    assert.equal(rc, 0);
+    assert.equal(ptrIPrivKey.toString('hex'), 
+      '0000010000000000894200000000000061706931373033320000000000000000');
+
+    //console.log('Crypt_OpenSecretKeyFromFile='+rc);
+    //console.log('ptrIPrivKey='+JSON.stringify(ptrIPrivKey));
+
 
     //rc=Crypt_Sign("Hello world",-1,temp,sizeof(temp),&sec);
     rc = libipriv.Crypt_Sign(srcbuffer, -1, buffer, 1024, ptrIPrivKey);
-    console.log('Crypt_Sign='+rc);
+    assert.equal(rc, 280);  //??? 280 не 0 - это подозрительно
+
+    //console.log('Crypt_Sign='+rc);
     console.log('buffer='+buffer);
 
     rc = libipriv.Crypt_CloseKey(ptrIPrivKey);
-    console.log('Crypt_CloseKey ptrIPrivKey='+rc);
+    assert.equal(rc, 0);
+    //console.log('Crypt_CloseKey ptrIPrivKey='+rc);
 
   })
 })
