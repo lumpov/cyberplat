@@ -20,6 +20,7 @@ typedef struct
 	void* key;				// Специфические для криптосредства данные
 }IPRIV_KEY;
 */
+/*
 var structIPRIV_KEY = new struct({
   'eng': 'short', //2
   'type': 'short', //2
@@ -29,6 +30,9 @@ var structIPRIV_KEY = new struct({
 });
 
 var reftypeIPRIV_KEY = ref.refType(structIPRIV_KEY);
+
+*/
+
 
 var libipriv = ffi.Library('./libipriv', {
   'Crypt_Initialize':  [ 'int', [ ] ],
@@ -78,25 +82,30 @@ const bufPublicKeyPath = new Buffer(36);
 bufPublicKeyPath.fill(0);
 bufPublicKeyPath.write('./pubkeys.key');
 
+
 //rc=Crypt_OpenSecretKeyFromFile(eng,"secret.key","1111111111",&sec);			// Загрузка собственного закрытого ключа
 rc = libipriv.Crypt_OpenSecretKeyFromFile(eng, bufSecretKeyPath, bufPassword, ptrIPrivKey);
 console.log('Crypt_OpenSecretKeyFromFile='+rc);
 console.log('ptrIPrivKey='+JSON.stringify(ptrIPrivKey));
+
 
 //rc=Crypt_OpenPublicKeyFromFile(eng,"pubkeys.key",17033,&pub1,0);		// Загрузка собственного открытого ключа
 rc = libipriv.Crypt_OpenPublicKeyFromFile(eng, bufPublicKeyPath, 17033, ptrIPubKey1, null);
 console.log('Crypt_OpenPublicKeyFromFile='+rc);
 console.log('ptrIPubKey1='+JSON.stringify(ptrIPubKey1));
 
+
 //rc=Crypt_Sign("Hello world",-1,temp,sizeof(temp),&sec);
 rc = libipriv.Crypt_Sign(srcbuffer, -1, buffer, 1024, ptrIPrivKey);
 console.log('Crypt_Sign='+rc);
 console.log('buffer='+buffer);
 
+
 //rc=Crypt_Verify(temp,rc,0,0,&pub2);
 rc = libipriv.Crypt_Verify(buffer, rc, null, null, ptrIPubKey1);
 console.log('Crypt_Verify='+rc);
 console.log('buffer='+buffer);
+
 
 rc = libipriv.Crypt_CloseKey(ptrIPubKey1);
 console.log('Crypt_CloseKey ptrIPubKey1='+rc);
