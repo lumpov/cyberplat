@@ -6,7 +6,10 @@ describe("Cyberplat", function() {
     it("check create", function() {
         var cyberplatAgent = new CyberplatAgent({
             crypto: {
-                libPath: './tests/libipriv'
+                debug: true,
+                libPath: './tests/libipriv',
+                secretKey: './tests/secret.key',
+                secretPhrase: '1111111111'   //password
             },
             settings: {
                 AP: 1,
