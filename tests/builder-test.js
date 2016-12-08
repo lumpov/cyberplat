@@ -5,7 +5,8 @@ describe("Builder", function() {
     var builder = new Builder({
         AP: 1,
         SD: 2,
-        OP: 3
+        OP: 3,
+        debug: false
     });
     
     it("check convert", function() {
@@ -15,14 +16,15 @@ describe("Builder", function() {
 
     it("check buildPayCheckMessage", function() {
         var message = builder.buildPayCheckMessage({
-            DATE: 12,
+            DATE: "12",
             SESSION: 'session',
-            AMOUNT: "1.00"
+            AMOUNT: "1.00"            
         });
 
         var str = [
             "DATE=12","SESSION=session",
-            "AMOUNT=1.00","SD=2","AP=1","OP=3"
+            "AMOUNT=1.00","NUMBER=",
+            "SD=2","AP=1","OP=3"
             ].join("\r\n");
 
         assert.equal(message,str);
