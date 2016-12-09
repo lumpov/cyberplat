@@ -20,17 +20,19 @@ describe("Builder", function() {
             SESSION: 'session',
             AMOUNT: "1.00",
             AMOUNT_ALL: "1.00",
-            TERM_ID: "1"
+            TERM_ID: "1",
+            NUMBER: "1212"
         };
 
         var message = builder.buildPayCheckMessage(obj);
 
         var str = [
+            "SD=2","AP=1","OP=3",
             "DATE=12","SESSION=session",
             "AMOUNT=1.00", "AMOUNT_ALL=1.00", 
-            "TERM_ID=1", "NUMBER=", "REQ_TYPE=0", 
+            "TERM_ID=1", "NUMBER=1212", "ACCOUNT=", "REQ_TYPE=0", 
             "PAY_TOOL=0", "COMMENT=", "ACCEPT_KEYS=", 
-            "NO_ROUTE=0", "SD=2","AP=1","OP=3"
+            "NO_ROUTE=0"
             ].join("\r\n");
 
         assert.equal(message, str);
