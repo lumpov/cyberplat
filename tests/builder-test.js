@@ -24,7 +24,7 @@ describe("Builder", function() {
             NUMBER: "1212"
         };
 
-        var message = builder.buildPayCheckMessage(obj);
+        var message = builder.buildMessage('payCheck', obj);
 
         var str = [
             "SD=2","AP=1","OP=3",
@@ -44,7 +44,7 @@ describe("Builder", function() {
             SESSION: 'session'
             };
 
-        var message = builder.buildPayCheckMessage(obj);
+        var message = builder.buildMessage('payCheck', obj);
         
         assert.equal(message, false);
     }); 

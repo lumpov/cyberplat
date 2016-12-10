@@ -9,6 +9,16 @@ var Cyberplat = function (ops) {
     var client = new Client(ops.settings);
     var builder = new Builder(ops.settings);
 
+    var go = function(type, obj, callback) {
+        var message = builder.buildMessage(type, obj);
+        var signedMessage = crypto.sign(message);
+        client.request(type, signedMessage, callback);
+    }
+
+    var payCheck = function (obj, callback) {
+        go('payCheck', obj, callback);
+    };
+
     return {
 
     };
