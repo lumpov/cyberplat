@@ -4,17 +4,19 @@ var Builder = require('./lib/builder');
 var Crypto = require('./lib/crypto');
 var Client = require('./lib/client');
 var Parser = require('./lib/parser');
+//var console = require('tracer').colorConsole({level:0});
+var Logger = require('./lib/logger');
 
 var Cyberplat = function (ops) {
 
     if (ops.debug) {
-        Object.assign(ops.crypto, {debug: true});
-        Object.assign(ops.settings, {debug: true});
+        var logger = new Logger();
     }
+    
 
-    var builder = new Builder(ops.settings);
-    var crypto = new Crypto(ops.crypto);
-    var client = new Client(ops.settings);
+    var builder = new Builder(ops.settings, logger);
+    var crypto = new Crypto(ops.crypto, logger);
+    var client = new Client(ops.settings, logger);
     
     var parser = new Parser();
 
@@ -24,15 +26,13 @@ var Cyberplat = function (ops) {
         client.request(type, signedMessage, function(response){
 
             // здесь добавить верификацию полученного сообщения
-            console.log(response.body);
+
             var answer = parser.parse(response.body);
-            console.log(answer);
             callback(answer.error, answer.object);
         });
     };
 
     var payCheck = function (obj, callback) {
-        console.log("ops.crypto", ops.crypto);
         go('payCheck', obj, callback);
     };
 

@@ -1,11 +1,13 @@
 var assert = require('assert');
 var Parser = require('../lib/parser');
 var fs = require('fs');
+var Logger = require('../lib/logger');
+
 
 describe("Parser", function() {
     
     it("check parse message", function() {
-        var parser = new Parser();
+        var parser = new Parser({}, new Logger());
         
         var message = fs.readFileSync('./tests/message.txt', 'utf8');
 

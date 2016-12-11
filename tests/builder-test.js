@@ -1,6 +1,7 @@
 var assert = require('assert');
 var Builder = require('../lib/builder');
 var fs = require('fs');
+var Logger = require('../lib/logger');
 
 describe("Builder", function() {
     var builder = new Builder({
@@ -8,14 +9,12 @@ describe("Builder", function() {
         SD: 2,
         OP: 3,
         debug: true
-    });
+    }, new Logger());
     
     it("check convert", function() {
         var message = builder.obj2str({ob: 12});
         assert.equal(message,"ob=12");
     });
-
-
 
     it("check valid buildPayCheckMessage", function() {
         var obj = {
