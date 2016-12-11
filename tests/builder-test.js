@@ -1,5 +1,6 @@
 var assert = require('assert');
-var Builder = require('../lib/builder')
+var Builder = require('../lib/builder');
+var fs = require('fs');
 
 describe("Builder", function() {
     var builder = new Builder({
@@ -10,9 +11,11 @@ describe("Builder", function() {
     });
     
     it("check convert", function() {
-        var message = builder.convert({ob: 12});
+        var message = builder.obj2str({ob: 12});
         assert.equal(message,"ob=12");
-    }); 
+    });
+
+
 
     it("check valid buildPayCheckMessage", function() {
         var obj = {
@@ -49,5 +52,13 @@ describe("Builder", function() {
         assert.equal(message, false);
     }); 
     
+    it("convert encoding", function() {
+        var message = "Привет!";
+        var encoded = builder.convertEncoding(message);
+
+        var message2 = fs.readFileSync('./tests/cp1251.txt');
+
+        assert.equal(encoded, message2);
+    });
     
 });

@@ -14,7 +14,8 @@ describe("Cyberplat", function() {
             settings: {
                 AP: 1,
                 SD: 2,
-                OP: 3
+                OP: 3,
+                debug: true
             }
         });
 

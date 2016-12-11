@@ -24,8 +24,10 @@
   },
   "dependencies": {
     "ffi": "^2.2.0",
+    "iconv-lite": "^0.4.15",
     "joi": "^10.0.5",
     "tracer": "^0.8.7",
-    "unirest": "^0.5.1"
+    "unirest": "^0.5.1",
+    "urlencode": "^1.1.0"
   }
 }
