@@ -1,5 +1,6 @@
 var assert = require('assert');
 var Cyberplat = require('../index')
+var moment = require('moment');
 
 describe("Cyberplat", function() {
 
@@ -14,8 +15,9 @@ describe("Cyberplat", function() {
                 AP: 1,
                 SD: 2,
                 OP: 3,
+                useHTTPS: false
             },
-            debug: true
+            debug: false
         });
 
         var obj = {
@@ -34,7 +36,6 @@ describe("Cyberplat", function() {
 
     }); 
 
-
     it("check create", function(done) {
         var cyberplat = new Cyberplat({
             crypto: {
@@ -46,18 +47,19 @@ describe("Cyberplat", function() {
                 SD: 17031,
                 AP: 17032,
                 OP: 17034,
+                useHTTPS: false
             },
             debug: true
         });
 
         var obj = {
-            DATE: "2016-12-11 12:45:34",
+            DATE: moment().format("DD.MM.YYYY HH:mm:ss"),
             AMOUNT: "1.00",
             AMOUNT_ALL: "1.00",
             TERM_ID: "1",
             NUMBER: "8888888888",
             REQ_TYPE: 1,
-            SESSION: "121212"
+            SESSION: "4b34d1d400000cb80029"
         };
 
         cyberplat.payCheck(obj, function(err, answer) {

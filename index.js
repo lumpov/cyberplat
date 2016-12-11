@@ -13,6 +13,15 @@ var Cyberplat = function (ops) {
         var logger = new Logger();
     }
     
+    var log = function() {
+        if (logger) {
+            logger.log(arguments[0], arguments[1]);
+        }
+    };
+
+    var trim = function(text){
+        return text.replace(/^\s+|\s+$/g, '');
+    }
 
     var builder = new Builder(ops.settings, logger);
     var crypto = new Crypto(ops.crypto, logger);
@@ -23,7 +32,11 @@ var Cyberplat = function (ops) {
     var go = function(type, obj, callback) {
         var message = builder.buildMessage(type, obj);
         var signedMessage = crypto.sign(message);
-        client.request(type, signedMessage, function(response){
+
+        log("signed message:", signedMessage);
+        log("length:", trim(signedMessage));
+
+        client.request(type, trim(signedMessage), function(response){
 
             // здесь добавить верификацию полученного сообщения
 
