@@ -2,11 +2,10 @@ var assert = require('assert');
 var Cyberplat = require('../index')
 
 describe("Cyberplat", function() {
-    
+
     it("check create", function(done) {
         var cyberplat = new Cyberplat({
             crypto: {
-                debug: true,
                 libPath: './tests/libipriv',
                 secretKey: './tests/secret.key',
                 secretPhrase: '1111111111'   //password
@@ -15,8 +14,8 @@ describe("Cyberplat", function() {
                 AP: 1,
                 SD: 2,
                 OP: 3,
-                debug: true
-            }
+            },
+            debug: true
         });
 
         var obj = {
