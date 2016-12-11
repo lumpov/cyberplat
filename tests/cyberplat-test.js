@@ -27,8 +27,8 @@ describe("Cyberplat", function() {
             NUMBER: "1212"
         };
 
-        cyberplat.payCheck(obj, function(response) {
-            console.log(response.body);
+        cyberplat.payCheck(obj, function(err, answer) {
+            console.log(answer);
             done();
         });
 
