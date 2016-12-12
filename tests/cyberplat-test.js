@@ -29,7 +29,7 @@ describe("Cyberplat", function() {
             NUMBER: "1212"
         };
 
-        cyberplat.payCheck(obj, function(err, answer) {
+        cyberplat.payCheck("227", obj, function(err, answer) {
             console.log(answer);
             done();
         });
@@ -56,13 +56,14 @@ describe("Cyberplat", function() {
             DATE: moment().format("DD.MM.YYYY HH:mm:ss"),
             AMOUNT: "1.00",
             AMOUNT_ALL: "1.00",
+            COMMENT: "вася",
             TERM_ID: "1",
             NUMBER: "8888888888",
             REQ_TYPE: 1,
             SESSION: "4b34d1d400000cb80029"
         };
 
-        cyberplat.payCheck(obj, function(err, answer) {
+        cyberplat.payCheck("227", obj, function(err, answer) {
             console.log(answer);
             done();
         });

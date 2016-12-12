@@ -29,14 +29,15 @@ var Cyberplat = function (ops) {
     
     var parser = new Parser();
 
-    var go = function(type, obj, callback) {
+    var go = function(type, providerid, obj, callback) {
         var message = builder.buildMessage(type, obj);
         var signedMessage = crypto.sign(message);
+        var str = signedMessage.replace(/\s/g, "+");
 
-        log("signed message:", signedMessage);
-        log("length:", trim(signedMessage));
+        log("signed message:", str);
+        log("length:", trim(str));
 
-        client.request(type, trim(signedMessage), function(response){
+        client.request(type, providerid, trim(str), function(response){
 
             // здесь добавить верификацию полученного сообщения
 
@@ -45,24 +46,24 @@ var Cyberplat = function (ops) {
         });
     };
 
-    var payCheck = function (obj, callback) {
-        go('payCheck', obj, callback);
+    var payCheck = function (providerid, obj, callback) {
+        go('payCheck', providerid, obj, callback);
     };
 
-    var pay = function (obj, callback) {
-        go('pay', obj, callback);
+    var pay = function (providerid, obj, callback) {
+        go('pay', providerid, obj, callback);
     };
 
     var payStatus = function (obj, callback) {
-        go('payStatus', obj, callback);
+        go('payStatus', null, obj, callback);
     };
 
     var limitStatus = function (obj, callback) {
-        go('limitStatus', obj, callback);
+        go('limitStatus', null, obj, callback);
     };
 
     var fillStatus = function (obj, callback) {
-        go('fillStatus', obj, callback);
+        go('fillStatus', null, obj, callback);
     };
 
     return {

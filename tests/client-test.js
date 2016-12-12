@@ -21,7 +21,7 @@ describe("Client", function() {
     it("check", function(done) {
         var str = "name=Привет!";
 
-        client.request('payCheck', str, function(response) {
+        client.request('payCheck', "12", str, function(response) {
             console.log("response.body", response.body);
             done();
         });

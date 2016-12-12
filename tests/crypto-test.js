@@ -12,7 +12,9 @@ describe("Crypto", function() {
             secretPhrase: "1111111111"
         }, new Logger());
 
-        var crypted = crypto.sign("hello");        
+        var crypted = crypto.sign("hello=qw");
+
+        console.log("crypted", crypted);       
     }); 
     
 });
