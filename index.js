@@ -32,7 +32,7 @@ var Cyberplat = function (ops) {
     var go = function(type, providerid, obj, callback) {
         var message = builder.buildMessage(type, obj);
         var signedMessage = crypto.sign(message);
-        var str = signedMessage.replace(/\s/g, "+");
+        var str = signedMessage; //signedMessage.replace(/\s/g, "+");
 
         log("signed message:", str);
         log("length:", trim(str));
