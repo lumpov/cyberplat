@@ -2,6 +2,7 @@ var assert = require('assert');
 var Cyberplat = require('../index')
 var moment = require('moment');
 var Parser = require('../lib/parser');
+var randomstring = require('randomstring');
 
 describe("Cyberplat", function() {
 
@@ -32,10 +33,13 @@ describe("Cyberplat", function() {
                 AP: 17032,
                 OP: 17034,
                 useHTTPS: false,
-                payCheckUrl: "http://localhost:8998"
+                payCheckUrl: "http://localhost:8998",
+                payUrl: "http://localhost:8998",
             },
             debug: true
         });
+
+        var session = randomstring.generate(7);
 
         var obj = {
             DATE: moment().format("DD.MM.YYYY HH:mm:ss"),
@@ -45,13 +49,31 @@ describe("Cyberplat", function() {
             TERM_ID: "1",
             NUMBER: "8888888888",
             REQ_TYPE: 0,
-            SESSION: "4b34d1d400000cb80029"
+            SESSION: session
         };
 
         cyberplat.payCheck("227", obj, function(err, answer) {
-            console.log(answer);
-            done();
+            console.log("payCheck answer", answer);
+            
+            var obj2 = {
+                DATE: moment().format("DD.MM.YYYY HH:mm:ss"),
+                AMOUNT: "1.00",
+                AMOUNT_ALL: "1.00",
+                COMMENT: "mimi",
+                TERM_ID: "1",
+                NUMBER: "8888888888",
+                REQ_TYPE: 0,
+                SESSION: session,
+                RRN: "1212"
+            };
+
+            cyberplat.pay("227", obj2, function(err, answer) {
+                console.log("pay answer", answer)
+                done();
+            })
+
         });
+
 
     }); 
     

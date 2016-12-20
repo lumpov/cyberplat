@@ -4,9 +4,9 @@ var moment = require('moment');
 
 var cyberplat = new Cyberplat({
     crypto: {
-        libPath: '/usr/lib/libipriv/libipriv',  //path to file of lib libiriv
+        libPath: '/usr/lib/libipriv/libipriv',     //path to file of lib libiriv
         secretKey: '/var/secretplace/secret.key',  //path to secret.key
-        secretPhrase: 'secretPassword'   //secret password of secret key
+        secretPhrase: 'secretPassword'             //secret password of secret key
     },
     settings: {
         SD: 17031,
