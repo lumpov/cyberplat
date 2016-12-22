@@ -21,7 +21,7 @@ describe("Client", function() {
     it("check", function(done) {
         var str = "name=Привет!";
 
-        client.request('payCheck', "12", str, function(response) {
+        client.request("http://www.cyberplat.ru/", str, function(response) {
             console.log("response.body", response.body);
             done();
         });

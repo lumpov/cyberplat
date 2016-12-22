@@ -17,6 +17,18 @@ describe("Cyberplat", function() {
                 OP: 3,
                 useHTTPS: false
             },
+            providers: {
+                "227": {
+                    payCheck: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay_check.cgi',
+                    pay: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay.cgi',
+                    payStatus: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
+                },
+                "180": {
+                    payCheck: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay_check.cgi',
+                    pay: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay.cgi',
+                    payStatus: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
+                }
+            },
             debug: false
         });
 
@@ -48,6 +60,18 @@ describe("Cyberplat", function() {
                 AP: 17032,
                 OP: 17034,
                 useHTTPS: false
+            },
+            providers: {
+                "227": {
+                    payCheck: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay_check.cgi',
+                    pay: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay.cgi',
+                    payStatus: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
+                },
+                "180": {
+                    payCheck: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay_check.cgi',
+                    pay: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay.cgi',
+                    payStatus: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
+                }
             },
             debug: true
         });
