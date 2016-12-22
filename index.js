@@ -9,6 +9,8 @@ var Client = require('./lib/client');
 var Parser = require('./lib/parser');
 var Logger = require('./lib/logger');
 
+var errors = require('./lib/errors');
+
 var Cyberplat = function (ops) {
 
     assert(ops.crypto);
@@ -38,7 +40,7 @@ var Cyberplat = function (ops) {
     }
     var client = new Client(ops.settings, logger);
     
-    var parser = new Parser();
+    var parser = new Parser({}, null, errors);
 
     var go = function(type, providerid, obj, callback) {
 
