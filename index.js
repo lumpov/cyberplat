@@ -63,7 +63,7 @@ var Cyberplat = function (ops) {
             // здесь добавить верификацию полученного сообщения
 
             var answer = parser.parse(response.body);
-            callback(answer.error, answer.object);
+            callback(answer.object);
         });
     };
 

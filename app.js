@@ -27,9 +27,7 @@ var obj = {
     SESSION: "4b34d1d400000cb80029"
 };
 
-cyberplat.payCheck("227", obj, function(err, answer) {
+cyberplat.payCheck("227", obj, function(answer) {
     console.log(answer);
     done();
 });
-
-
