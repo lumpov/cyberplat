@@ -15,7 +15,6 @@ describe("Crypto", function() {
         */
 
         var crypto = new Crypto({
-            debug: true,
             libPath: "./tests/libipriv",
             secretKey: "./tests/secret.key",
             secretPhrase: "1111111111"

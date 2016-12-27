@@ -7,8 +7,7 @@ describe("Builder", function() {
     var builder = new Builder({
         AP: 1,
         SD: 2,
-        OP: 3,
-        debug: true
+        OP: 3
     });
 
     /*

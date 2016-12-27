@@ -33,10 +33,7 @@ describe("Cyberplat local", function() {
             settings: {
                 SD: 17031,
                 AP: 17032,
-                OP: 17034,
-                useHTTPS: false,
-                payCheckUrl: "http://localhost:8998",
-                payUrl: "http://localhost:8998",
+                OP: 17034
             },
             providers: {
                 "local": {
@@ -44,8 +41,7 @@ describe("Cyberplat local", function() {
                     pay: 'http://localhost:' + port + '/pay',
                     payStatus: 'http://localhost:' + port + '/payStatus',
                 }
-            },
-            debug: false
+            }
         });
 
         var session = randomstring.generate(7);

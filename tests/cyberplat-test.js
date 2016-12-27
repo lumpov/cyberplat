@@ -15,7 +15,6 @@ describe("Cyberplat", function() {
                 AP: 1,
                 SD: 2,
                 OP: 3,
-                useHTTPS: false
             },
             providers: {
                 "227": {
@@ -28,8 +27,7 @@ describe("Cyberplat", function() {
                     pay: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay.cgi',
                     payStatus: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
                 }
-            },
-            debug: false
+            }
         });
 
         var obj = {
@@ -74,8 +72,7 @@ describe("Cyberplat", function() {
                     pay: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay.cgi',
                     payStatus: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
                 }
-            },
-            debug: false
+            }
         });
 
         var obj = {

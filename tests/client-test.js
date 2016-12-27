@@ -9,8 +9,7 @@ describe("Client", function() {
     var client = new Client({
         AP: 1,
         SD: 2,
-        OP: 3,
-        debug: true
+        OP: 3        
     });
 
     it("check set user agent string", function() {
@@ -23,8 +22,6 @@ describe("Client", function() {
 
         client.request("https://service.cyberplat.ru/cgi-bin/t2/t2_pay_check.cgi", str, function(response) {
             //console.log("response.body", response.body);
-
-            
             done();
         });
     })

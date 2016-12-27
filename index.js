@@ -7,7 +7,6 @@ var Builder = require('./lib/builder');
 var Crypto = require('./lib/crypto');
 var Client = require('./lib/client');
 var Parser = require('./lib/parser');
-var Logger = require('./lib/logger');
 
 var errors = require('./lib/errors');
 
@@ -17,9 +16,12 @@ var Cyberplat = function (ops) {
     assert(ops.settings);
     assert(ops.providers);
 
-    if (ops.debug) {
-        var logger = new Logger();
-    }
+    var logger = null;
+    
+    if (ops.logger) {
+        assert(ops.logger.log);
+        logger = ops.logger;
+    };
     
     var log = function() {
         if (logger) {
@@ -35,9 +37,11 @@ var Cyberplat = function (ops) {
 
     var builder = new Builder(ops.settings, logger);
     var crypto = new Crypto(ops.crypto, logger);
+
     if (!crypto) {
         throw new Error('no init crypto lib');
     }
+    
     var client = new Client(ops.settings, logger);
     
     var parser = new Parser({}, null, errors);
@@ -49,6 +53,7 @@ var Cyberplat = function (ops) {
 
         if (providers && providers[providerid] && providers[providerid][type]){
             url = providers[providerid][type];
+            log("Provider:", providers[providerid]);
         }
 
         if (!url) {callback(null)};
