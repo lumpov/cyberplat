@@ -1,4 +1,14 @@
 language: node_js
+
 node_js:
   - "6.9"
   - "7.3"
+
+os:
+  - linux
+
+sudo:
+  - true
+
+dist: 
+  - precise
