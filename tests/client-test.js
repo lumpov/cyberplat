@@ -1,6 +1,5 @@
 var assert = require('assert');
 var Client = require('../lib/client');
-var Logger = require('../lib/logger');
 
 var unirest = require('unirest');
 

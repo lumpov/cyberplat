@@ -1,7 +1,6 @@
 var assert = require('assert');
 var Builder = require('../lib/builder');
 var fs = require('fs');
-var Logger = require('../lib/logger');
 
 describe("Builder", function() {
     var builder = new Builder({

@@ -1,6 +1,5 @@
 var assert = require('assert');
 var Crypto = require('../lib/crypto');
-var Logger = require('../lib/logger');
 
 describe("Crypto", function() {
     

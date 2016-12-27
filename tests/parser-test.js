@@ -1,7 +1,6 @@
 var assert = require('assert');
 var Parser = require('../lib/parser');
 var fs = require('fs');
-var Logger = require('../lib/logger');
 var errors = require('../lib/errors');
 
 describe("Parser", function() {
