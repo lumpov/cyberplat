@@ -2,9 +2,15 @@
 
 nodejs module for interact with cyberplat.ru
 
+## Prepare
+
+compile libipriv.so for your platform [details: ./iprivpg]
+
+
 ## Install
 
 > npm install cyberplat 
+
 
 ## Using 
 
@@ -23,7 +29,7 @@ var cyberplat = new Cyberplat({
     settings: {
         SD: 17031,
         AP: 17032,
-        OP: 17033        
+        OP: 17033
     },
     providers: {
         "227": {

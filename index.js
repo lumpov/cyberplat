@@ -43,8 +43,15 @@ var Cyberplat = function (ops) {
     var parser = new Parser({}, null, errors);
 
     var go = function(type, providerid, obj, callback) {
+        //assert(providers[providerid])
 
-        var url = providers[providerid][type];
+        var url = null;
+
+        if (providers && providers[providerid] && providers[providerid][type]){
+            url = providers[providerid][type];
+        }
+
+        if (!url) {callback(null)};
 
         var message = builder.buildMessage(type, obj);
         var signedMessage = crypto.sign(message);
@@ -59,11 +66,13 @@ var Cyberplat = function (ops) {
         //log("trim:", trim(str));
 
         client.request(url, trim(str), function(response){
-
+            var answer = false;
             // здесь добавить верификацию полученного сообщения
+            if (response.ok) {
+                answer = parser.parse(response.body);
+            };
 
-            var answer = parser.parse(response.body);
-            callback(answer.object);
+            callback(answer);
         });
     };
 
@@ -94,8 +103,9 @@ var Cyberplat = function (ops) {
         payCheck: payCheck,
         pay: pay,
         payStatus: payStatus,
-        limitStatus: limitStatus,
-        fillStatus: fillStatus
+        //limitStatus: limitStatus,
+        //fillStatus: fillStatus,
+        ERRORS: errors
     };
 };
 

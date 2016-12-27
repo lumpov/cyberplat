@@ -1,24 +1,26 @@
 var assert = require('assert');
-var Cyberplat = require('../index')
-var moment = require('moment');
-var Parser = require('../lib/parser');
 var randomstring = require('randomstring');
+var moment = require('moment');
+var fs = require('fs')
 
-describe("Cyberplat", function() {
+
+var Cyberplat = require('../index')
+var Parser = require('../lib/parser');
+
+
+describe("Cyberplat local", function() {
 
     var http = require('http');
 
     var handle = function (req, res) {
-        res.end("good message");
-        //done();
+        var message = fs.readFileSync('./tests/message.txt', 'utf8');
+        res.end(message);
     };
 
     var port = 8998;
     var server = http.createServer(handle);
 
-    server.listen(port, function(){
-        //console.log("start server")
-    });
+    server.listen(port);
 
 
     it("check create", function(done) {
@@ -37,18 +39,13 @@ describe("Cyberplat", function() {
                 payUrl: "http://localhost:8998",
             },
             providers: {
-                "227": {
-                    payCheck: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay_check.cgi',
-                    pay: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay.cgi',
-                    payStatus: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
-                },
-                "180": {
-                    payCheck: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay_check.cgi',
-                    pay: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay.cgi',
-                    payStatus: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
+                "local": {
+                    payCheck: 'http://localhost:' + port + '/payCheck',
+                    pay: 'http://localhost:' + port + '/pay',
+                    payStatus: 'http://localhost:' + port + '/payStatus',
                 }
             },
-            debug: true
+            debug: false
         });
 
         var session = randomstring.generate(7);
@@ -64,23 +61,18 @@ describe("Cyberplat", function() {
             SESSION: session
         };
 
-        cyberplat.payCheck("227", obj, function(err, answer) {
-            console.log("payCheck answer", answer);
+        cyberplat.payCheck("local", obj, function(answer) {
+            //console.log("payCheck answer", answer);
             
-            var obj2 = {
-                DATE: moment().format("DD.MM.YYYY HH:mm:ss"),
-                AMOUNT: "1.00",
-                AMOUNT_ALL: "1.00",
-                COMMENT: "mimi",
-                TERM_ID: "1",
-                NUMBER: "8888888888",
-                REQ_TYPE: 0,
-                SESSION: session,
-                RRN: "1212"
-            };
+            assert.equal(answer.ERROR, "1");
+            assert.equal(answer.RESULT, "1");
 
-            cyberplat.pay("227", obj2, function(err, answer) {
-                console.log("pay answer", answer)
+            cyberplat.pay("local", obj, function(answer) {
+                //console.log("pay answer", answer)
+
+                assert.equal(answer.ERROR, "1");
+                assert.equal(answer.RESULT, "1");
+            
                 done();
             })
 

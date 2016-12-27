@@ -9,7 +9,16 @@ describe("Builder", function() {
         SD: 2,
         OP: 3,
         debug: true
+    });
+
+    /*
+    var builder = new Builder({
+        AP: 1,
+        SD: 2,
+        OP: 3,
+        debug: true
     }, new Logger());
+    */
     
     it("check convert", function() {
         var message = builder.obj2str({ob: 12});

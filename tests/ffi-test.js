@@ -93,7 +93,7 @@ describe("ffi test", function () {
     assert.equal(rc, 280);  //??? 280 не 0 - это подозрительно
 
     //console.log('Crypt_Sign='+rc);
-    console.log('buffer='+buffer);
+    //console.log('buffer='+buffer);
 
     rc = libipriv.Crypt_CloseKey(ptrIPrivKey);
     assert.equal(rc, 0);

@@ -22,7 +22,9 @@ describe("Client", function() {
         var str = "name=Привет!";
 
         client.request("https://service.cyberplat.ru/cgi-bin/t2/t2_pay_check.cgi", str, function(response) {
-            console.log("response.body", response.body);
+            //console.log("response.body", response.body);
+
+            
             done();
         });
     })

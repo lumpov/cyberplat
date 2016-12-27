@@ -42,7 +42,9 @@ describe("Cyberplat", function() {
         };
 
         cyberplat.payCheck("227", obj, function(answer) {
-            console.log(answer);
+            assert(answer);
+            assert.equal(answer.ERROR,"6");
+            assert.equal(answer.RESULT,"1");
             done();
         });
 
@@ -73,7 +75,7 @@ describe("Cyberplat", function() {
                     payStatus: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
                 }
             },
-            debug: true
+            debug: false
         });
 
         var obj = {
@@ -88,7 +90,7 @@ describe("Cyberplat", function() {
         };
 
         cyberplat.payCheck("227", obj, function(answer) {
-            console.log(answer);
+//            console.log(answer);
             done();
         });
 
