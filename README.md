@@ -38,9 +38,7 @@ var cyberplat = new Cyberplat({
             payStatusUrl: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
         }
     },
-    logger: {                              //false or true
-        log: console.log
-    }                   
+    logger: console                  
 });
 
 var session = randomstring.generate(20);    //сессия не должна повторяться

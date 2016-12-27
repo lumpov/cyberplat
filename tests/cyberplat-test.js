@@ -59,7 +59,6 @@ describe("Cyberplat", function() {
                 SD: 17031,
                 AP: 17032,
                 OP: 17034,
-                useHTTPS: false
             },
             providers: {
                 "227": {
