@@ -33,9 +33,9 @@ var cyberplat = new Cyberplat({
     },
     providers: {
         "227": {
-            payCheckUrl: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay_check.cgi',
-            payUrl: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay.cgi',
-            payStatusUrl: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
+            payCheck: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay_check.cgi',
+            pay: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay.cgi',
+            payStatus: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
         }
     },
     logger: console                  
@@ -95,9 +95,9 @@ cyberplat.payCheck("227", obj, function(answer) {
 `````javascript
 
 "227": {
-    payCheckUrl: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay_check.cgi',
-    payUrl: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay.cgi',
-    payStatusUrl: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
+    payCheck: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay_check.cgi',
+    pay: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay.cgi',
+    payStatus: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
 }
 
 `````
