@@ -1,18 +1,18 @@
 # Cyberplat 
 
-nodejs module for interact with cyberplat.ru
+nodejs модуль для проведения платежей через сервис cyberplat.ru
 
-## Prepare
+## Подготовка
 
-compile libipriv.so for your platform [details: ./iprivpg]
+Для проведения платежей необходимо осуществлять криптографическую подпись сообщения. Для этого используется libipriv.so. Перед использованием nodejs модуля необходимо собрать под вашу платформу libipriv.so. Исходный код и инструкции по сборке - в директории ./iprivpg.
 
 
-## Install
+## Установка
 
 > npm install cyberplat 
 
 
-## Using 
+## Пример использования
 
 `````javascript
 
@@ -63,3 +63,46 @@ cyberplat.payCheck("227", obj, function(answer) {
 });
 
 `````
+
+### Пояснения к примеру
+
+1. Для проведения платежей необходимо установить настройки модуля.
+
+2. В настройках есть несколько логических секций: crypto, settings, providers, logger.
+
+3. В секции crypto указываются необходимые для криптографической подписи параметры: путь к модулю libipriv.so, путь к секретному ключу, секретная фраза. Секретный ключ и секретная фраза получаются в сервисе cyberplat.ru.
+
+4. В секции settings указываются настройки SD, AP, OP - коды контрагента, точки приема и оператора точки приема. Затем эти параметры используются во всех сообщениях для проведения платежей.
+
+5. В секции providers указываются адреса для каждого типа запросов к сервису cyberplat.ru.
+
+6. В секции logger передается объект логгирования
+
+7. Типы запросов к сервису cyberplat.ru:
+
+а. payCheck - запрос на получение разрешения на платеж
+
+б. pay - запрос на платеж
+
+в. payStatus - запрос на получение статуса платежа
+
+
+* В соответствии с [Руководством по программному взаимодействию с системой "Cyberplat"](http://www.cyberplat.ru/download/API_CyberPlat.pdf), пункты 2.2, 2.3, 2.4
+
+
+8. Для каждого типа запроса в каждом провайдере в секции providers должен быть соответствующий url. Например: 
+
+`````javascript
+
+"227": {
+    payCheckUrl: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay_check.cgi',
+    payUrl: 'https://service.cyberplat.ru/cgi-bin/t2/t2_pay.cgi',
+    payStatusUrl: 'https://service.cyberplat.ru/cgi-bin/es/es_pay_status.cgi'
+}
+
+`````
+
+* Пример списка провайдеров: ./misc/providers.json, получен из [списка провайдеров Cyberplat](https://service.cyberplat.ru/cgi-bin/view_stat.utf/help.cgi)
+
+9. Затем при вызове запроса указывается код провайдера, модуль cyberplat берет соответствующий url и согласно порядка, описанному в пункте 3 [Руководства по программному взаимодействию с системой "Cyberplat"](http://www.cyberplat.ru/download/API_CyberPlat.pdf)
+
