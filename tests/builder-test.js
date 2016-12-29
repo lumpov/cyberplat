@@ -56,15 +56,6 @@ describe("Builder", function() {
         var message = builder.buildMessage('payCheck', obj);
         
         assert.equal(message, false);
-    }); 
-    
-    it("convert encoding", function() {
-        var message = "Привет!";
-        var encoded = builder.convertEncoding(message);
-
-        var message2 = fs.readFileSync('./tests/cp1251.txt');
-
-        assert.equal(encoded, message2);
-    });
+    });    
     
 });

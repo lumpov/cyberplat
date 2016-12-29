@@ -7,6 +7,7 @@ var Builder = require('./lib/builder');
 var Crypto = require('./lib/crypto');
 var Client = require('./lib/client');
 var Parser = require('./lib/parser');
+var Converter = require('./lib/converter');
 
 var errors = require('./lib/errors');
 
@@ -37,6 +38,7 @@ var Cyberplat = function (ops) {
 
     var builder = new Builder(ops.settings, logger);
     var crypto = new Crypto(ops.crypto, logger);
+    var converter = new Converter(logger);
 
     if (!crypto) {
         throw new Error('no init crypto lib');
@@ -56,10 +58,11 @@ var Cyberplat = function (ops) {
             log("Provider:", providers[providerid]);
         }
 
-        if (!url) {callback(null)};
+        if (!url) { callback(false) }
 
         var message = builder.buildMessage(type, obj);
-        var signedMessage = crypto.sign(message);
+        var encodedMessageToWin1251 = converter.convertUTF8toWIN1251(message).toString();
+        var signedMessage = crypto.sign(encodedMessageToWin1251);
 
         if (!signedMessage) {
             throw new Error('no sign message');
@@ -74,8 +77,14 @@ var Cyberplat = function (ops) {
             var answer = false;
             // здесь добавить верификацию полученного сообщения
             if (response.ok) {
-                answer = parser.parse(response.body);
-            };
+                log('response.body:', response.body);
+                var res = new Buffer(response.body, 'binary');
+                var encodedMessageToUTF8 = converter.convertWIN1251toUTF8(res);
+
+                log('convert to utf8 response body', encodedMessageToUTF8);
+
+                answer = parser.parse(encodedMessageToUTF8);
+            }
 
             callback(answer);
         });
