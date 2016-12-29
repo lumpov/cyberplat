@@ -58,6 +58,7 @@ cyberplat.payCheck("227", obj, function(answer) {
     if (answer.ERROR == "0" && answer.RESULT == "0") {
         cyberplat.payCheck("227", obj, function(answer) {
             console.log("pay answer:", answer);
+
         }
     }
 });
