@@ -61,7 +61,7 @@ var Cyberplat = function (ops) {
         if (!url) { callback(false) }
 
         var message = builder.buildMessage(type, obj);
-        var encodedMessageToWin1251 = converter.convertUTF8toWIN1251(message).toString();
+        var encodedMessageToWin1251 = converter.convertUTF8toWIN1251(message);
         var signedMessage = crypto.sign(encodedMessageToWin1251);
 
         if (!signedMessage) {
