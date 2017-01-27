@@ -78,8 +78,7 @@ var Cyberplat = function (ops) {
             // здесь добавить верификацию полученного сообщения
             if (response.ok) {
                 log('response.body:', response.body);
-                var res = new Buffer(response.body, 'binary');
-                var encodedMessageToUTF8 = converter.convertWIN1251toUTF8(res);
+                var encodedMessageToUTF8 = converter.convertWIN1251toUTF8(response.body);
 
                 log('convert to utf8 response body', encodedMessageToUTF8);
 
