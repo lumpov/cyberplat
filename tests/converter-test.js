@@ -15,7 +15,7 @@ describe("Converter", function(){
 
         var message2 = fs.readFileSync('./tests/cp1251.txt').toString('binary');   //return buffer
 
-        assert.equal(encoded.toString(), message2.toString());
+        assert.equal(encoded, message2);
     });
 
     it("test convert win1251 to utf8", function() {
@@ -24,18 +24,7 @@ describe("Converter", function(){
         var message2 = fs.readFileSync('./tests/cp1251.txt').toString('binary');
         var encoded = converter.convertWIN1251toUTF8(message2);
         
-        assert.equal(encoded.toString(), message);
+        assert.equal(encoded, message);
     });
 
-
-     it("test convert win1251 to utf8", function() {
-        var message = "Привет!";
-
-        var message2 = fs.readFileSync('./tests/cp1251.txt').toString('binary');
-        var encoded = converter.convertWIN1251toUTF8(message2);
-
-        var t = new Buffer(message2.toString(), 'binary');        
-        
-        assert.equal(encoded.toString(), message);
-    });
 });
