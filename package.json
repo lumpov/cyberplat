@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "ffi": "^2.2.0",
+    "iconv": "^2.2.1",
     "iconv-lite": "^0.4.15",
     "joi": "^10.0.5",
     "tracer": "^0.8.7",

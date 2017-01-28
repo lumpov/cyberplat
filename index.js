@@ -10,6 +10,16 @@ var Parser = require('./lib/parser');
 var Converter = require('./lib/converter');
 
 var errors = require('./lib/errors');
+//var windows1251 = require('windows-1251');
+var fs = require('fs');
+
+var Buffer = require('buffer').Buffer;
+var Iconv  = require('iconv').Iconv;
+var assert = require('assert');
+
+var iconvUtf8ToWin1251 = new Iconv('UTF-8', 'windows-1251');
+
+var iconvWin1251ToUtf8 = new Iconv('windows-1251', 'UTF-8');
 
 var Cyberplat = function (ops) {
 
@@ -61,8 +71,12 @@ var Cyberplat = function (ops) {
         if (!url) { callback(false) }
 
         var message = builder.buildMessage(type, obj);
-        var encodedMessageToWin1251 = converter.convertUTF8toWIN1251(message);
+
+        var encodedMessageToWin1251 = iconvUtf8ToWin1251.convert(message);
+        fs.writeFileSync('/tmp/message1.txt', encodedMessageToWin1251);
+
         var signedMessage = crypto.sign(encodedMessageToWin1251);
+        fs.writeFileSync('/tmp/message2.txt', signedMessage);
 
         if (!signedMessage) {
             throw new Error('no sign message');
@@ -70,10 +84,20 @@ var Cyberplat = function (ops) {
         
         var str = signedMessage;    //signedMessage.replace(/\s/g, "+");
 
-        log("signed message:", str);
+        log("signed Message:", signedMessage);
+
+        //var b = signedMessage.toString('binary');
+        //log("b", b);
+        
+
+        //var t = windows1251.decode(b);
+        //log("t", t);
+        //log("signed message:", converter.convertWIN1251toUTF8(signedMessage.toString('binary')));
         //log("trim:", trim(str));
 
-        client.request(url, trim(str), function(response){
+        str = iconvWin1251ToUtf8.convert(signedMessage);
+
+        client.request(url, str, function(response){
             var answer = false;
             // здесь добавить верификацию полученного сообщения
             if (response.ok) {
