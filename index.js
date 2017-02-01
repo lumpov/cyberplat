@@ -5,24 +5,16 @@ var assert = require("assert");
 var rest = require('restler');
 var qs = require('qs');
 var qsIconv = require('qs-iconv');
-var win1251 = require('qs-iconv/encoder')('win1251');
+var Iconv  = require('iconv').Iconv;
+
 
 var Builder = require('./lib/builder');
 var Crypto = require('./lib/crypto');
-var Client = require('./lib/client');
 var Parser = require('./lib/parser');
-var Converter = require('./lib/converter');
 
 var errors = require('./lib/errors');
-//var windows1251 = require('windows-1251');
-var fs = require('fs');
-
-var Buffer = require('buffer').Buffer;
-var Iconv  = require('iconv').Iconv;
-var assert = require('assert');
 
 var iconvUtf8ToWin1251 = new Iconv('UTF-8', 'windows-1251');
-
 var iconvWin1251ToUtf8 = new Iconv('windows-1251', 'UTF-8');
 
 var Cyberplat = function (ops) {
@@ -52,15 +44,18 @@ var Cyberplat = function (ops) {
 
     var builder = new Builder(ops.settings, logger);
     var crypto = new Crypto(ops.crypto, logger);
-    var converter = new Converter(logger);
+    var parser = new Parser({}, null, errors);
 
     if (!crypto) {
         throw new Error('no init crypto lib');
     }
     
-    var client = new Client(ops.settings, logger);
-    
-    var parser = new Parser({}, null, errors);
+    var userAgentString = [
+        "User-Agent: Cyberplat.js ver. 0.1",
+        "SD: " + ops.settings.SD,
+        "AP: " + ops.settings.AP,
+        "OP: " + ops.settings.OP
+        ].join(", ");
 
     var go = function(type, providerid, obj, callback) {
         var url = null;
@@ -76,15 +71,18 @@ var Cyberplat = function (ops) {
         var encodedMessageToWin1251 = iconvUtf8ToWin1251.convert(message);
         var signedMessage = crypto.sign(encodedMessageToWin1251);
 
+        // signedMessage is Buffer with message in cp1251 encoding 
+
         if (!signedMessage) {
             throw new Error('no sign message');
         }
         
+        /* for debug        
         log("signed Message:", signedMessage);
-
         var s = signedMessage.toString();
         log('signed message in win1251', s);
- 
+        */
+
         var str = iconvWin1251ToUtf8.convert(signedMessage).toString();
         log ('signed message in utf8', str)
             
@@ -99,28 +97,13 @@ var Cyberplat = function (ops) {
           data: encodedMessage,
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': userAgentString
           }
         }).on('complete', function(data) {
           log(data);
+          var answer = parser.parse(data);
+          callback(answer);
         });
-
-        /*
-        client.request(url, str, function(response){
-            var answer = false;
-            // здесь добавить верификацию полученного сообщения
-            if (response.ok) {
-                log('response.body:', response.body);
-                var encodedMessageToUTF8 = converter.convertWIN1251toUTF8(response.body);
-
-                log('convert to utf8 response body', encodedMessageToUTF8);
-
-                answer = parser.parse(encodedMessageToUTF8);
-            }
-
-            callback(answer);
-        });
-
-        */
     };
 
     var payCheck = function (providerid, obj, callback) {        
