@@ -2,6 +2,10 @@
 
 var assert = require("assert");
 
+var rest = require('restler');
+var qs = require('qs');
+var qsIconv = require('qs-iconv');
+var win1251 = require('qs-iconv/encoder')('win1251');
 
 var Builder = require('./lib/builder');
 var Crypto = require('./lib/crypto');
@@ -59,8 +63,6 @@ var Cyberplat = function (ops) {
     var parser = new Parser({}, null, errors);
 
     var go = function(type, providerid, obj, callback) {
-        //assert(providers[providerid])
-
         var url = null;
 
         if (providers && providers[providerid] && providers[providerid][type]){
@@ -71,32 +73,38 @@ var Cyberplat = function (ops) {
         if (!url) { callback(false) }
 
         var message = builder.buildMessage(type, obj);
-
         var encodedMessageToWin1251 = iconvUtf8ToWin1251.convert(message);
-        fs.writeFileSync('/tmp/message1.txt', encodedMessageToWin1251);
-
         var signedMessage = crypto.sign(encodedMessageToWin1251);
-        fs.writeFileSync('/tmp/message2.txt', signedMessage);
 
         if (!signedMessage) {
             throw new Error('no sign message');
         }
         
-        var str = signedMessage;    //signedMessage.replace(/\s/g, "+");
-
         log("signed Message:", signedMessage);
 
-        //var b = signedMessage.toString('binary');
-        //log("b", b);
-        
+        var s = signedMessage.toString();
+        log('signed message in win1251', s);
+ 
+        var str = iconvWin1251ToUtf8.convert(signedMessage).toString();
+        log ('signed message in utf8', str)
+            
+        var encodedMessage = qs
+            .stringify({inputmessage: str}, {encoder: qsIconv.encoder('win1251')})
+            .replace(/\%00/g,"")
+            .replace(/\%20/g,"+");
 
-        //var t = windows1251.decode(b);
-        //log("t", t);
-        //log("signed message:", converter.convertWIN1251toUTF8(signedMessage.toString('binary')));
-        //log("trim:", trim(str));
+        log('encodedMessage', encodedMessage);
 
-        str = iconvWin1251ToUtf8.convert(signedMessage);
+        rest.post(url, {
+          data: encodedMessage,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          }
+        }).on('complete', function(data) {
+          log(data);
+        });
 
+        /*
         client.request(url, str, function(response){
             var answer = false;
             // здесь добавить верификацию полученного сообщения
@@ -111,6 +119,8 @@ var Cyberplat = function (ops) {
 
             callback(answer);
         });
+
+        */
     };
 
     var payCheck = function (providerid, obj, callback) {        
