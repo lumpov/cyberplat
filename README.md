@@ -109,3 +109,9 @@ cyberplat.payCheck("227", obj, function(answer) {
 
 9. Затем при вызове запроса указывается код провайдера, модуль cyberplat берет соответствующий url и согласно порядка, описанному в пункте 3 [Руководства по программному взаимодействию с системой "Cyberplat"](http://www.cyberplat.ru/download/API_CyberPlat.pdf)
 
+
+## Поддержка
+
+Вопросы? Баги? 
+
+email serge.dmitriev@gmail.com

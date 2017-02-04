@@ -1,6 +1,6 @@
 {
   "name": "cyberplat",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "node module for Cyberplat API",
   "main": "index.js",
   "directories": {
