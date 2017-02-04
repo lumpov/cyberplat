@@ -2,6 +2,8 @@
 
 nodejs модуль для проведения платежей через сервис cyberplat.ru
 
+[![Build Status](https://travis-ci.org/antirek/cyberplat.svg?branch=master)](https://travis-ci.org/antirek/cyberplat)
+
 ## Подготовка
 
 Для проведения платежей необходимо осуществлять криптографическую подпись сообщения. Для этого используется libipriv.so. Перед использованием nodejs модуля необходимо собрать под вашу платформу libipriv.so. Исходный код и инструкции по сборке - в директории ./iprivpg.
