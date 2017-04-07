@@ -181,7 +181,8 @@ int Crypt_ReadPublicKey2(const char* src,int nsrc,IPRIV_KEY_BODY* key)
 
 	return 0;
 }
-int Crypt_WritePublicKey(char* dst,int ndst,IPRIV_KEY_BODY* key,IPRIV_KEY* cakey,IPRIV_ENGINE* eng)
+
+int Crypt_WritePublicKey(char * dst, int ndst, IPRIV_KEY_BODY * key, IPRIV_KEY * cakey, IPRIV_ENGINE * eng, IPRIV_ENGINE * ca_eng)
 {
 	MemBuf body(2048);
 	MemBuf sign(2048);
@@ -210,7 +211,7 @@ int Crypt_WritePublicKey(char* dst,int ndst,IPRIV_KEY_BODY* key,IPRIV_KEY* cakey
 	memset((char*)&sig,0,sizeof(sig));
 	if(cakey)
 	{
-		rc=Crypt_SignPacket(keypos.ptr,keypos.len,cakey,sign.getptr(),sign.getlen(),key->userid,&sig,eng,IPRIV_ALG_MD5);
+		rc = Crypt_SignPacket(keypos.ptr, keypos.len, cakey, sign.getptr(), sign.getlen(), key->userid, &sig, ca_eng, IPRIV_ALG_MD5);
 		if(rc<0)
 			return rc;
 		di.sig=sign.getptr();

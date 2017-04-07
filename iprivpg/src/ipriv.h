@@ -94,7 +94,7 @@ typedef struct
 	int (*secret_key_decrypt) (unsigned char* src,int nsrc,unsigned char* dst,int ndst,IPRIV_KEY* k);
 }IPRIV_ENGINE;
 
-// одни движки могут вызывать реализацию других движков
+// РѕРґРЅРё РґРІРёР¶РєРё РјРѕРіСѓС‚ РІС‹Р·С‹РІР°С‚СЊ СЂРµР°Р»РёР·Р°С†РёСЋ РґСЂСѓРіРёС… РґРІРёР¶РєРѕРІ
 extern IPRIV_ENGINE crypt_eng_list[IPRIV_MAX_ENG_NUM];
 
 
@@ -104,7 +104,7 @@ int Crypt_WriteSecretKey(char* dst,int ndst,const char* passwd,IPRIV_KEY_BODY* k
 int Crypt_SignPacket(const char* src,int nsrc,IPRIV_KEY* key,char* dst,int ndst,const char* pubuserid,IPRIV_SIGNATURE* sig,IPRIV_ENGINE* eng,int alg);
 int Crypt_ReadPublicKey(const char* src,int nsrc,unsigned long keyserial,IPRIV_KEY_BODY* key,IPRIV_KEY* cakey,IPRIV_ENGINE* eng);
 int Crypt_ReadPublicKey2(const char* src,int nsrc,IPRIV_KEY_BODY* key);
-int Crypt_WritePublicKey(char* dst,int ndst,IPRIV_KEY_BODY* key,IPRIV_KEY* cakey,IPRIV_ENGINE* eng);
+int Crypt_WritePublicKey(char* dst, int ndst, IPRIV_KEY_BODY* key, IPRIV_KEY* cakey, IPRIV_ENGINE* eng, IPRIV_ENGINE * ca_eng);
 int Crypt_VerifyPacket(const char* src,int nsrc,const char* sigsrc,int nsigsrc,IPRIV_KEY* key,const char* pubuserid,IPRIV_SIGNATURE* sig,IPRIV_ENGINE* eng);
 
 
