@@ -7,6 +7,8 @@
 #ifndef __LIBIPRIV_H
 #define __LIBIPRIV_H
 
+#include "config.h"
+
 // Коды ошибок
 #define CRYPT_ERR_BAD_ARGS		-1	// Ошибка в аргументах
 #define CRYPT_ERR_OUT_OF_MEMORY		-2	// Ошибка выделения памяти

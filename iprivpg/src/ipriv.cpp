@@ -3,6 +3,8 @@
    e-mail: support@cyberplat.com
 */
 
+#include "config.h"
+
 #include "ipriv.h"
 #include "armor.h"
 #include "radix64.h"

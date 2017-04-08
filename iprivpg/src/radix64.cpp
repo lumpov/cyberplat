@@ -3,6 +3,8 @@
    e-mail: support@cyberplat.com
 */
 
+#include "config.h"
+
 #include <string.h>
 #include "radix64.h"
 #include "i_stdlib.h"

@@ -4,7 +4,7 @@ var Crypto = require('../lib/crypto');
 describe("Crypto", function() {
     
     it("check sign message", function() {
-        /*
+        /* 
         var crypto = new Crypto({
             debug: true,
             libPath: "./tests/libipriv",
@@ -12,16 +12,16 @@ describe("Crypto", function() {
             secretPhrase: "1111111111"
         }, new Logger());
         */
-
+        
         var crypto = new Crypto({
             libPath: "./tests/libipriv",
             secretKey: "./tests/secret.key",
             secretPhrase: "1111111111"
         });
 
-        var crypted = crypto.sign("hello=qw");
-
-        //console.log("crypted", crypted);
+        var signed = crypto.sign("hello=qw");
+        
+        assert.ok(signed.indexOf("END SIGNATURE") > 0);
     }); 
     
 });

@@ -17,6 +17,8 @@
 #include <wincrypt.h>
 #endif /* _WIN32 */
 
+#include "config.h"
+
 #include "eng_rsaref.h"
 #include "i_stdlib.h"
 #include "rsaref/i_global.h"

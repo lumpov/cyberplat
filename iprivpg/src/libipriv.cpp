@@ -7,6 +7,8 @@
 #include <windows.h>
 #endif
 
+#include "config.h"
+
 #include "libipriv.h"
 #include "ipriv.h"
 #include <string.h>

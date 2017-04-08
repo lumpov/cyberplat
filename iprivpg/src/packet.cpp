@@ -3,6 +3,8 @@
    e-mail: support@cyberplat.com
 */
 
+#include "config.h"
+
 #include "packet.h"
 #include <string.h>
 #include <time.h>
