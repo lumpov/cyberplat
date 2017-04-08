@@ -19,17 +19,17 @@
 
 #include "eng_rsaref.h"
 #include "i_stdlib.h"
-#include "i_global.h"
-#include "rsaref.h"
+#include "rsaref/i_global.h"
+#include "rsaref/rsaref.h"
 #include "libipriv.h"
 #include <string.h>
 #include "packet.h"
 #include <time.h>
 
 extern "C" {
-#include "rsa.h"
-#include "nn.h"
-#include "r_random.h"
+#include "rsaref/rsa.h"
+#include "rsaref/nn.h"
+#include "rsaref/r_random.h"
 }
 
 /*

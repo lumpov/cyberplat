@@ -7,6 +7,12 @@
     "test": "tests"
   },
   "scripts": {
+    "autogypi": "autogypi",
+    "node-gyp": "node-gyp",
+    "emcc-path": "emcc-path",
+    "copyasm": "copyasm",
+    "ndts": "ndts",
+    "install": "autogypi --init-gyp -p nbind -s iprivpg/wrapper/ipriv.cxx -s iprivpg/src/*ipriv.* -s iprivpg/src/armor.* -s iprivpg/src/eng_rsaref.* -s iprivpg/src/i_stdlib.* -s iprivpg/src/keycard.* -s iprivpg/src/memfile.cpp -s iprivpg/src/packet.cpp -s iprivpg/src/radix64.cpp -s iprivpg/src/idea/idea.c -s iprivpg/src/md5/md5c.c -s iprivpg/src/rfc6234/sha256.c -s iprivpg/src/rsaref/*.c  && node-gyp configure build",
     "test": "mocha --reporter spec tests/*-test.js"
   },
   "repository": {
@@ -26,9 +32,12 @@
     "randomstring": "^1.1.5"
   },
   "dependencies": {
+    "autogypi": "^0.2.2",
     "ffi": "^2.2.0",
     "iconv": "^2.2.1",
     "joi": "^10.0.5",
+    "nbind": "^0.3.9",
+    "node-gyp": "^3.6.0",
     "qs": "^6.3.0",
     "qs-iconv": "^1.0.4",
     "restler": "^3.4.0",

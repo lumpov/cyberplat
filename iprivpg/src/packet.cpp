@@ -7,7 +7,7 @@
 #include <string.h>
 #include <time.h>
 #ifndef WITH_OPENSSL
-#include "md5.h"
+#include "md5/md5.h"
 #else
 #include <openssl/md5.h>
 #endif
