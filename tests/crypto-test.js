@@ -7,14 +7,12 @@ describe("Crypto", function() {
         /* 
         var crypto = new Crypto({
             debug: true,
-            libPath: "./tests/libipriv",
             secretKey: "./tests/secret.key",
             secretPhrase: "1111111111"
         }, new Logger());
         */
         
         var crypto = new Crypto({
-            libPath: "./tests/libipriv",
             secretKey: "./tests/secret.key",
             secretPhrase: "1111111111"
         });

@@ -26,7 +26,6 @@ describe("Cyberplat local", function() {
     it("check create", function(done) {
         var cyberplat = new Cyberplat({
             crypto: {
-                libPath: './tests/libipriv',
                 secretKey: './tests/secret.key',
                 secretPhrase: '1111111111'   //password
             },

@@ -5,59 +5,59 @@
 
 //---------------------------------------------------------------------------------------
 IprivKey::IprivKey() :
-  eng(IPRIV_ENGINE_RSAREF),  // Select crypto engine
-  alg(IPRIV_ALG_MD5)         // Select crypto hash algorithm
+    eng(IPRIV_ENGINE_RSAREF), // Select crypto engine
+    alg(IPRIV_ALG_MD5)        // Select crypto hash algorithm. Use IPRIV_ALG_SHA256 for better security.
 {
-  memset(&mKey, 0, sizeof(mKey));
+    memset(&mKey, 0, sizeof(mKey));
 }
 
 //---------------------------------------------------------------------------------------
 IprivKey::~IprivKey()
 {
-  Crypt_CloseKey(&mKey);
+    Crypt_CloseKey(&mKey);
 }
 
 //---------------------------------------------------------------------------------------
 int IprivKey::initialize()
 {
-	return Crypt_Initialize();
+    return Crypt_Initialize();
 }
 
 //---------------------------------------------------------------------------------------
 int IprivKey::done()
 {
-	return Crypt_Done();
+    return Crypt_Done();
 }
 
 //---------------------------------------------------------------------------------------
 int IprivKey::OpenSecretKeyFromFile(std::string filePath, std::string password)
 {
-	int rc = Crypt_OpenSecretKeyFromFile(eng, filePath.c_str(), password.c_str(), &mKey);
+    int rc = Crypt_OpenSecretKeyFromFile(eng, filePath.c_str(), password.c_str(), &mKey);
 
-//	std::cerr << "open = " << rc << std::endl;
+    //	std::cerr << "open = " << rc << std::endl;
 
-	return rc;
+    return rc;
 }
 
 //---------------------------------------------------------------------------------------
 int IprivKey::Sign(nbind::Buffer message, nbind::Buffer result)
 {
-  const char * input = reinterpret_cast<const char *>(message.data());
-  int inputSize = message.length();
+    const char * input = reinterpret_cast<const char *>(message.data());
+    int inputSize = message.length();
 
-  char * output = reinterpret_cast<char *>(result.data());
-  int outputSize = result.length();
+    char * output = reinterpret_cast<char *>(result.data());
+    int outputSize = result.length();
 
-//  std::cerr << "msg(" << std::string(input, inputSize) << ") size = " << inputSize << "\n " << "outSize = " << outputSize << "\n";
+    //  std::cerr << "msg(" << std::string(input, inputSize) << ") size = " << inputSize << "\n " << "outSize = " << outputSize << "\n";
 
-  int rc = Crypt_SignEx(input, inputSize, output, outputSize, &mKey, alg);
-  if (rc > 0)
-  {
-	  return rc;
-  }
+    int rc = Crypt_SignEx(input, inputSize, output, outputSize, &mKey, alg);
+    if (rc > 0)
+    {
+        return rc;
+    }
 
-  result.commit();
-  return rc;
+    result.commit();
+    return rc;
 }
 
 //---------------------------------------------------------------------------------------
@@ -66,13 +66,13 @@ int IprivKey::Sign(nbind::Buffer message, nbind::Buffer result)
 //---------------------------------------------------------------------------------------
 NBIND_CLASS(IprivKey)
 {
-	construct<>();
+    construct<>();
 
-	method(initialize);
-	method(done);
+    method(initialize);
+    method(done);
 
-	method(OpenSecretKeyFromFile);
-	method(Sign);
+    method(OpenSecretKeyFromFile);
+    method(Sign);
 }
 
 //---------------------------------------------------------------------------------------

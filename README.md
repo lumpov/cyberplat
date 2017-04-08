@@ -6,13 +6,14 @@ nodejs модуль для проведения платежей через се
 
 ## Подготовка
 
-Для проведения платежей необходимо осуществлять криптографическую подпись сообщения. Для этого используется libipriv.so. Перед использованием nodejs модуля необходимо собрать под вашу платформу libipriv.so. Исходный код и инструкции по сборке - в директории ./iprivpg.
-
+Для проведения платежей необходимо осуществлять криптографическую подпись сообщения. Для этого используется libipriv. 
 
 ## Установка
 
+> npm install  nbind autogypi node-gyp
+> npm run install
+> npm run test
 > npm install cyberplat 
-
 
 ## Пример использования
 
@@ -24,7 +25,6 @@ var randomstring = require("randomstring");
 
 var cyberplat = new Cyberplat({
     crypto: {
-        libPath: './libipriv/libipriv',    //path to file of lib libiriv
         secretKey: './secret/secret.key',  //path to secret.key
         secretPhrase: ''                   //secret password of secret key
     },
