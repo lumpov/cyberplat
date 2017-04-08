@@ -20,12 +20,13 @@ int IprivKey::loadSecretFromFile(std::string filePath, std::string password)
 	return -1;
 }
 
-int Ipriv::done()
+
+#include "nbind/nbind.h"
+
+NBIND_GLOBAL()
 {
-	return Crypt_Done();
+	function(Crypt_Initialize);
+	function(Crypt_Done);
 }
 
-int Ipriv::initialize()
-{
-	return Crypt_Initialize();
-}
+

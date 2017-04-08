@@ -15,11 +15,3 @@ public:
 
 };
 
-
-class Ipriv
-{
-public:
-    static int initialize();
-    static int done();
-};
-
