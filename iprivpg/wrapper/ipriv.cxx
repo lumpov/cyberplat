@@ -29,4 +29,9 @@ NBIND_GLOBAL()
 	function(Crypt_Done);
 }
 
+NBIND_CLASS(IprivKey)
+{
+	construct<>();
 
+	method(loadSecretFromFile);
+}
