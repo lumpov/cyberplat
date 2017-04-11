@@ -1,0 +1,17 @@
+{
+	"cflags": ["-O2", "-fno-stack-protector","-fPIC"],
+	"include_dirs": [
+		"iprivpg/src",
+		"iprivpg/src/idea",
+		"iprivpg/src/rsaref",
+		"iprivpg/src/rfc6234",
+		"iprivpg/src/md5"
+     ],
+	 "defines": [
+          "WITH_RSAREF",
+		  "WITH_RSAREF_GENKEY",
+		  "WITH_2048_KEYS",
+		  "WITH_EXCEPTIONS",
+		  "IDEA32"
+	]
+}

@@ -1,0 +1,8 @@
+{
+        "dependencies": [
+                "nbind"
+        ],
+        "includes": [
+			"target-config.json"
+		]
+}
