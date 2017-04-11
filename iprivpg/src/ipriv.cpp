@@ -3,8 +3,6 @@
    e-mail: support@cyberplat.com
 */
 
-#include "config.h"
-
 #include "ipriv.h"
 #include "armor.h"
 #include "radix64.h"
@@ -12,11 +10,11 @@
 #include <string.h>
 #include <time.h>
 #ifndef WITH_OPENSSL
-#include "md5/md5.h"
+#include "md5.h"
 #else
 #include <openssl/md5.h>
 #endif
-#include "rfc6234/sha256.h"
+#include "sha256.h"
 
 int Crypt_ReadSecretKey(const char* src,int nsrc,const char* passwd,IPRIV_KEY_BODY* key)
 {

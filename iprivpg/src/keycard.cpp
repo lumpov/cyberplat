@@ -1,6 +1,3 @@
-
-#include "config.h"
-
 #include <stdlib.h>
 #include <string.h>
 #include "libipriv.h"
@@ -125,7 +122,7 @@ int CryptWriteKeyCard(char *dst, int ndst, unsigned long serial, const char *use
 }
 
 /*
-// �������� �������� �����
+// записать карточку ключа
 int writeKeyFile(const char *keyfilename, long keySerial, const char *userid)
 {
 	int rc, len;

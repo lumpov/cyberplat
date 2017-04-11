@@ -8,7 +8,7 @@
 #define __PACKET_H
 
 #include "memfile.h"
-#include "idea/idea.h"
+#include "idea.h"
 #include "libipriv.h"
 #include "ipriv.h"
 

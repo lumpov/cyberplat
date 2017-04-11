@@ -7,9 +7,6 @@
 #ifndef _I_GLOBAL_H_
 #define _I_GLOBAL_H_ 1
 
-#include "../config.h"
-
-
 /* PROTOTYPES should be set to one if and only if the compiler supports
      function argument prototyping.
    The following makes PROTOTYPES default to 1 if it has not already been

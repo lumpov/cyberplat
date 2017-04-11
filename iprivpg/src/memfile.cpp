@@ -3,8 +3,6 @@
    e-mail: support@cyberplat.com
 */
 
-#include "config.h"
-
 #include "memfile.h"
 #include <string.h>
 #include <stdarg.h>

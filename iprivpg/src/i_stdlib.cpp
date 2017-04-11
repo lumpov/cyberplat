@@ -4,8 +4,6 @@
 */
 
 
-#include "config.h"
-
 #include <string.h>
 #include "i_stdlib.h"
 #include <stdlib.h>

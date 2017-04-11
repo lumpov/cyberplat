@@ -4,7 +4,6 @@
 */
 
 
-#include "config.h"
 #include "armor.h"
 #include "memfile.h"
 #include "i_stdlib.h"
