@@ -32,14 +32,15 @@
     "randomstring": "^1.1.5"
   },
   "dependencies": {
-    "nan": "^2.0.0",
     "iconv": "^2.2.1",
     "joi": "^10.0.5",
     "mocha": "^3.2.0",
+    "nan": "^2.6.1",
     "node-gyp": "^3.6.0",
     "qs": "^6.3.0",
     "qs-iconv": "^1.0.4",
     "restler": "^3.4.0",
     "tracer": "^0.8.7"
-  }
+  },
+  "gypfile": true
 }

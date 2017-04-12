@@ -5,7 +5,9 @@
 			"cflags": [
 				"-O2",
 				"-fno-stack-protector",
-				"-fPIC"
+				"-fPIC",
+				"-fno-exceptions",
+				"-fno-rtti" 
 			],
 			"include_dirs": [
 				"<!(node -e \"require('nan')\")",
@@ -19,11 +21,11 @@
 		          "WITH_RSAREF",
 				  "WITH_RSAREF_GENKEY",
 				  "WITH_2048_KEYS",
-				  "WITH_EXCEPTIONS",
+				  "WITHOUT_KEYGEN",
 				  "IDEA32"
 			],
 			"sources": [
-				"iprivpg/wrapper/ipriv.cxx",
+				"iprivpg/wrapper/ipriv.cpp",
 				"iprivpg/src/libipriv.cpp",
 				"iprivpg/src/ipriv.cpp",
 				"iprivpg/src/armor.cpp",
