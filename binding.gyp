@@ -3,11 +3,11 @@
 		{
 			"target_name": "iprivpg",
 			"cflags": [
-				"-O2",
-				"-fno-stack-protector",
-				"-fPIC",
-				"-fno-exceptions",
-				"-fno-rtti" 
+#				"-O2",
+#				"-fno-stack-protector",
+#				"-fPIC",
+#				"-fno-exceptions",
+#				"-fno-rtti" 
 			],
 			"include_dirs": [
 				"<!(node -e \"require('nan')\")",

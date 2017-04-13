@@ -19,6 +19,8 @@ describe("Crypto", function() {
 
         var signed = crypto.sign("hello=qw");
         
+        console.log('signed message:', signed);
+        
         assert.ok(signed.indexOf("END SIGNATURE") > 0);
     }); 
     

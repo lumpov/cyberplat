@@ -28,6 +28,7 @@ private:
 
     static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
     static void OpenSecretKeyFromFile(const Nan::FunctionCallbackInfo<v8::Value> & info);
+    static void Sign(const Nan::FunctionCallbackInfo<v8::Value> & info);
 //    int Sign(nbind::Buffer message, nbind::Buffer result);
     static Nan::Persistent<v8::Function> constructor;
 };

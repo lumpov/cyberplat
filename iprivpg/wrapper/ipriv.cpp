@@ -30,6 +30,7 @@ void IprivKey::Init(v8::Local<v8::Object> exports)
 
 	// Prototype
 	Nan::SetPrototypeMethod(tpl, "OpenSecretKeyFromFile", OpenSecretKeyFromFile);
+	Nan::SetPrototypeMethod(tpl, "Sign", Sign);
 
 	constructor.Reset(tpl->GetFunction());
 	exports->Set(Nan::New("IprivKey").ToLocalChecked(), tpl->GetFunction());
@@ -62,7 +63,7 @@ IprivKey::IprivKey() :
 {
     memset(&mKey, 0, sizeof(mKey));
 
-    std::cerr << "this= " << this << "\n";
+  //  std::cerr << "this= " << this << "\n";
 }
 
 //---------------------------------------------------------------------------------------
@@ -89,40 +90,66 @@ void IprivKey::OpenSecretKeyFromFile(const Nan::FunctionCallbackInfo<v8::Value> 
     std::string filePath = *v8::String::Utf8Value(info[0]->ToString());
     std::string password = *v8::String::Utf8Value(info[1]->ToString());
 
-    std::cerr << "file: " << filePath << "\npassword:" << password << std::endl
-    		<< "key: " << key << "\n";
+//    std::cerr << "file: " << filePath << "\npassword:" << password << std::endl << "key: " << key << "\n";
 
 	int rc = Crypt_OpenSecretKeyFromFile(key->eng, filePath.c_str(), password.c_str(), &(key->mKey));
 
     //	std::cerr << "open = " << rc << std::endl;
-    std::cerr << "file: " << filePath << "password:" << password << std::endl
-    		<< "RC=" << rc << std::endl;
+    // std::cerr << "file: " << filePath << "password:" << password << std::endl << "RC=" << rc << std::endl;
 
 	info.GetReturnValue().Set(Nan::New(rc));
 }
 
-/*
 //---------------------------------------------------------------------------------------
-int IprivKey::Sign(nbind::Buffer message, nbind::Buffer result)
+void IprivKey::Sign(const Nan::FunctionCallbackInfo<v8::Value> & info)
 {
-    const char * input = reinterpret_cast<const char *>(message.data());
-    int inputSize = message.length();
+	IprivKey * key = ObjectWrap::Unwrap<IprivKey>(info.Holder());
 
-    char * output = reinterpret_cast<char *>(result.data());
-    int outputSize = result.length();
-
-    //  std::cerr << "msg(" << std::string(input, inputSize) << ") size = " << inputSize << "\n " << "outSize = " << outputSize << "\n";
-
-    int rc = Crypt_SignEx(input, inputSize, output, outputSize, &mKey, alg);
-    if (rc > 0)
-    {
-        return rc;
+    if (info.Length() < 2) {
+    	Nan::ThrowTypeError("Wrong number of arguments");
+    	return;
     }
 
-    result.commit();
-    return rc;
+    if (!info[0]->IsUint8Array() || !info[1]->IsUint8Array()) {
+    	Nan::ThrowTypeError("Wrong arguments");
+    	return;
+    }
+
+    Uint8Array * in = Uint8Array::Cast(*info[0]->ToObject());
+    Uint8Array * out = Uint8Array::Cast(*info[1]->ToObject());
+
+    if (in == nullptr || out == nullptr)
+    {
+    	Nan::ThrowTypeError("Wrong arguments");
+    	return;
+    }
+
+	if (!in->HasBuffer() || !out->HasBuffer())
+	{
+		Nan::ThrowError("Uint8Array Content error");
+		return;
+	}
+
+	const char * inBuffer = (const char *)in->Buffer()->GetContents().Data() + in->ByteOffset();
+	int inBufferSize = in->ByteLength();
+
+	char * outBuffer = (char *)out->Buffer()->GetContents().Data() + out->ByteOffset();
+	int outBufferSize = out->ByteLength();
+
+//	printf("\n\nIN BUFFER:\n%s\nIN BUFFER SIZE=%d\n", inBuffer, inBufferSize);
+
+//	printf("OUT BUFFER SIZE=%d\n\n", outBufferSize);
+
+	int rc = Crypt_SignEx(inBuffer, inBufferSize, outBuffer, outBufferSize, &key->mKey, key->alg);
+
+	if (rc < 0)
+	{
+		Nan::ThrowError("Crypt_SignEx error");
+		return;
+	}
+
+	info.GetReturnValue().Set(Nan::New(rc));
 }
-*/
 
 //---------------------------------------------------------------------------------------
 void Init(v8::Local<v8::Object> exports)
