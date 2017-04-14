@@ -11,7 +11,7 @@
     "emcc-path": "emcc-path",
     "copyasm": "copyasm",
     "ndts": "ndts",
-    "install": "autogypi --init-gyp -c autogypi.json && node-gyp configure build",
+    "install": "node-gyp configure build",
     "test": "mocha --reporter spec tests/*-test.js",
     "crypto-test": "mocha --reporter spec tests/crypto-test.js"
   },
