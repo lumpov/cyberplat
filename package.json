@@ -13,7 +13,8 @@
     "ndts": "ndts",
     "install": "node-gyp configure build",
     "test": "mocha --reporter spec tests/*-test.js",
-    "crypto-test": "mocha --reporter spec tests/crypto-test.js"
+    "crypto-test": "mocha --reporter spec tests/crypto-test.js",
+    "encoding-test": "mocha --reporter spec tests/encoding-test.js"
   },
   "repository": {
     "type": "git",

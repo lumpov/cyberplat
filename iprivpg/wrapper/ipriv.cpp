@@ -110,6 +110,9 @@ void IprivKey::Sign(const Nan::FunctionCallbackInfo<v8::Value> & info)
     	return;
     }
 
+    std::string inType = *v8::String::Utf8Value(info[0]->ToObject()->ObjectProtoToString());
+    printf("in object type: %s\n", inType.c_str());
+
     if (!info[0]->IsUint8Array() || !info[1]->IsUint8Array()) {
     	Nan::ThrowTypeError("Wrong arguments");
     	return;
