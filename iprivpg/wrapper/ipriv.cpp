@@ -101,6 +101,70 @@ void IprivKey::OpenSecretKeyFromFile(const Nan::FunctionCallbackInfo<v8::Value> 
 }
 
 //---------------------------------------------------------------------------------------
+class GetBuffer
+{
+	const v8::Local<Value> & mValue;
+	char * mBuffer;
+	int mLength;
+
+	v8::String::Utf8Value * mStringValue;
+
+public:
+	//---------------------------------------------------------------------------------------
+	explicit GetBuffer(const v8::Local<Value> & aValue) :
+		mValue(aValue), mBuffer(nullptr), mLength(0), mStringValue(nullptr)
+	{
+//	    std::string inType = *v8::String::Utf8Value(aValue->ToObject()->ObjectProtoToString());
+//	    printf("in object type: %s\n", inType.c_str());
+
+		if (aValue->IsUint8Array())
+		{
+		    Uint8Array * in = Uint8Array::Cast(*aValue);
+
+		    if (in->HasBuffer())
+			{
+		    	mBuffer = (char *)in->Buffer()->GetContents().Data() + in->ByteOffset();
+		    	mLength = in->ByteLength();
+			}
+		}
+		else if (aValue->IsString())
+		{
+			mStringValue = new v8::String::Utf8Value(aValue);
+			mBuffer = **mStringValue;
+			mLength = mStringValue->length();
+		}
+	}
+
+	//---------------------------------------------------------------------------------------
+	virtual ~GetBuffer()
+	{
+		if (mStringValue)
+		{
+			delete mStringValue;
+			mStringValue = nullptr;
+		}
+	}
+
+	//---------------------------------------------------------------------------------------
+	bool isValid() const
+	{
+		return mBuffer && mLength > 0;
+	}
+
+	//---------------------------------------------------------------------------------------
+	char * getPtr() const
+	{
+		return mBuffer;
+	}
+
+	//---------------------------------------------------------------------------------------
+	int getLength() const
+	{
+		return mLength;
+	}
+};
+
+//---------------------------------------------------------------------------------------
 void IprivKey::Sign(const Nan::FunctionCallbackInfo<v8::Value> & info)
 {
 	IprivKey * key = ObjectWrap::Unwrap<IprivKey>(info.Holder());
@@ -110,40 +174,19 @@ void IprivKey::Sign(const Nan::FunctionCallbackInfo<v8::Value> & info)
     	return;
     }
 
-    std::string inType = *v8::String::Utf8Value(info[0]->ToObject()->ObjectProtoToString());
-    printf("in object type: %s\n", inType.c_str());
+    GetBuffer in(info[0]);
+    GetBuffer out(info[1]);
 
-    if (!info[0]->IsUint8Array() || !info[1]->IsUint8Array()) {
-    	Nan::ThrowTypeError("Wrong arguments");
+    if (!in.isValid() || !out.isValid()) {
+		Nan::ThrowTypeError("Wrong type of arguments");
     	return;
     }
-
-    Uint8Array * in = Uint8Array::Cast(*info[0]->ToObject());
-    Uint8Array * out = Uint8Array::Cast(*info[1]->ToObject());
-
-    if (in == nullptr || out == nullptr)
-    {
-    	Nan::ThrowTypeError("Wrong arguments");
-    	return;
-    }
-
-	if (!in->HasBuffer() || !out->HasBuffer())
-	{
-		Nan::ThrowError("Uint8Array Content error");
-		return;
-	}
-
-	const char * inBuffer = (const char *)in->Buffer()->GetContents().Data() + in->ByteOffset();
-	int inBufferSize = in->ByteLength();
-
-	char * outBuffer = (char *)out->Buffer()->GetContents().Data() + out->ByteOffset();
-	int outBufferSize = out->ByteLength();
 
 //	printf("\n\nIN BUFFER:\n%s\nIN BUFFER SIZE=%d\n", inBuffer, inBufferSize);
 
 //	printf("OUT BUFFER SIZE=%d\n\n", outBufferSize);
 
-	int rc = Crypt_SignEx(inBuffer, inBufferSize, outBuffer, outBufferSize, &key->mKey, key->alg);
+	int rc = Crypt_SignEx(in.getPtr(), in.getLength(), out.getPtr(), out.getLength(), &key->mKey, key->alg);
 
 	if (rc < 0)
 	{

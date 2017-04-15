@@ -1,13 +1,20 @@
 {
+	"variables": {
+		"node_version": '<!(node -e "console.log(process.versions.node)")'
+	},
 	"targets": [
 		{
 			"target_name": "iprivpg",
-			"cflags": [
-#				"-O2",
-#				"-fno-stack-protector",
-#				"-fPIC",
-#				"-fno-exceptions",
-#				"-fno-rtti" 
+			"conditions": [
+				["node_version[0] == '7'", {
+					"cflags": [
+#						"-O2",
+#						"-fno-stack-protector",
+#						"-fPIC",
+#						"-fno-exceptions",
+#						"-fno-rtti" 
+					],
+				}]
 			],
 			"include_dirs": [
 				"<!(node -e \"require('nan')\")",

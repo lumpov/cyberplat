@@ -19,7 +19,7 @@ describe("Crypto", function() {
 
         var signed = crypto.sign("hello=qw");
         
-        console.log('signed message:', signed);
+        console.log('signed message:', signed.toString());
         
         assert.ok(signed.indexOf("END SIGNATURE") > 0);
     }); 
