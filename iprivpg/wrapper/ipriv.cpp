@@ -180,18 +180,14 @@ void IprivKey::Verify(const Nan::FunctionCallbackInfo<v8::Value> & info)
     	return;
     }
 
-    //
     unsigned long keySerial = 0;
     int rc = Crypt_Verify2(in.getPtr(), in.getLength(), Crypt_FindPublicKey_Func, 0, 0, &keySerial);
-
-    std::cerr << "Crypt_Verify2 = " << rc << "\nkeySerial = " << keySerial << "\n\n"
-    << key->mPublicKeyPath << "\n";
 
     IPRIV_KEY pubKey;
     if (key->mPublicKeys.find(keySerial) == key->mPublicKeys.end()) {
         rc = key->OpenPublicKeyFromFile(key->mPublicKeyPath, keySerial);
         if (rc) {
-            std::cerr << "RC = " << rc << "\n\n";
+            std::cerr << "OpenPublicKeyFromFile result: " << rc << "\n";
             
             Nan::ThrowTypeError("OpenPublicKeyFromFile failed");
             return;
