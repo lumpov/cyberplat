@@ -118,7 +118,7 @@ var Cyberplat = function (ops) {
           }
         }).on('complete', function(data) {
           log(data);
-          var answer = parser.parse(data);
+          var answer = parser.parse(crypto.validate(data));
           callback(answer);
         });
     };

@@ -150,8 +150,7 @@ void IprivKey::OpenPublicKeyFromFile(const Nan::FunctionCallbackInfo<v8::Value> 
 
     int rc = key->OpenPublicKeyFromFile(key->mPublicKeyPath, serial);
 
-    std::cerr << "openPublic = " << rc << std::endl;
-    // std::cerr << "file: " << filePath << "password:" << password << std::endl << "RC=" << rc << std::endl;
+    //std::cerr << "openPublic = " << rc << std::endl;
 
 	info.GetReturnValue().Set(Nan::New(rc));
 }
@@ -185,11 +184,16 @@ void IprivKey::Verify(const Nan::FunctionCallbackInfo<v8::Value> & info)
     unsigned long keySerial = 0;
     int rc = Crypt_Verify2(in.getPtr(), in.getLength(), Crypt_FindPublicKey_Func, 0, 0, &keySerial);
 
+    std::cerr << "Crypt_Verify2 = " << rc << "\nkeySerial = " << keySerial << "\n\n"
+    << key->mPublicKeyPath << "\n";
+
     IPRIV_KEY pubKey;
     if (key->mPublicKeys.find(keySerial) == key->mPublicKeys.end()) {
         rc = key->OpenPublicKeyFromFile(key->mPublicKeyPath, keySerial);
         if (rc) {
-            Nan::ThrowTypeError("Wrong type of arguments");
+            std::cerr << "RC = " << rc << "\n\n";
+            
+            Nan::ThrowTypeError("OpenPublicKeyFromFile failed");
             return;
         }
     }
@@ -209,7 +213,7 @@ void IprivKey::Verify(const Nan::FunctionCallbackInfo<v8::Value> & info)
         memcpy(out.getPtr(), outPtr, size);
     }
 
-	info.GetReturnValue().Set(Nan::New(rc));
+	info.GetReturnValue().Set(Nan::New(size));
 }
 
 //---------------------------------------------------------------------------------------

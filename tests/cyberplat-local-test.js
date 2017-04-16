@@ -65,7 +65,7 @@ describe("Cyberplat local", function() {
 
             cyberplat.pay("local", obj, function(answer) {
                 //console.log("pay answer", answer)
-
+                
                 assert.equal(answer.ERROR, "1");
                 assert.equal(answer.RESULT, "1");
             
