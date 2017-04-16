@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "ipriv.h"
+#include "getbuffer.h"
 
 using namespace v8;
 
@@ -30,8 +31,9 @@ void IprivKey::Init(v8::Local<v8::Object> exports)
 
 	// Prototype
 	Nan::SetPrototypeMethod(tpl, "OpenSecretKeyFromFile", OpenSecretKeyFromFile);
-	Nan::SetPrototypeMethod(tpl, "Sign", Sign);
 	Nan::SetPrototypeMethod(tpl, "OpenPublicKeyFromFile", OpenPublicKeyFromFile);
+	Nan::SetPrototypeMethod(tpl, "Sign", Sign);
+	Nan::SetPrototypeMethod(tpl, "Verify", Verify);
 
 	constructor.Reset(tpl->GetFunction());
 	exports->Set(Nan::New("IprivKey").ToLocalChecked(), tpl->GetFunction());
@@ -62,7 +64,7 @@ IprivKey::IprivKey() :
     eng(IPRIV_ENGINE_RSAREF), // Select crypto engine
     alg(IPRIV_ALG_MD5)        // Select crypto hash algorithm. Use IPRIV_ALG_SHA256 for better security.
 {
-    memset(&mKey, 0, sizeof(mKey));
+    memset(&mSecretKey, 0, sizeof(mSecretKey));
 
   //  std::cerr << "this= " << this << "\n";
 }
@@ -70,7 +72,15 @@ IprivKey::IprivKey() :
 //---------------------------------------------------------------------------------------
 IprivKey::~IprivKey()
 {
-    Crypt_CloseKey(&mKey);
+    Crypt_CloseKey(&mSecretKey);
+
+    while (mPublicKeys.size())
+    {
+    	std::map<unsigned long, IPRIV_KEY>::iterator it = mPublicKeys.begin();
+
+    	Crypt_CloseKey(&it->second);
+    	mPublicKeys.erase(it);
+    }
 }
 
 //---------------------------------------------------------------------------------------
@@ -93,12 +103,26 @@ void IprivKey::OpenSecretKeyFromFile(const Nan::FunctionCallbackInfo<v8::Value> 
 
 //    std::cerr << "file: " << filePath << "\npassword:" << password << std::endl << "key: " << key << "\n";
 
-	int rc = Crypt_OpenSecretKeyFromFile(key->eng, filePath.c_str(), password.c_str(), &(key->mKey));
+	int rc = Crypt_OpenSecretKeyFromFile(key->eng, filePath.c_str(), password.c_str(), &(key->mSecretKey));
 
     //	std::cerr << "open = " << rc << std::endl;
     // std::cerr << "file: " << filePath << "password:" << password << std::endl << "RC=" << rc << std::endl;
 
 	info.GetReturnValue().Set(Nan::New(rc));
+}
+
+//---------------------------------------------------------------------------------------
+int IprivKey::OpenPublicKeyFromFile(const std::string & aFileName, unsigned long aKeySerial)
+{
+    IPRIV_KEY pubKey;
+
+	int rc = Crypt_OpenPublicKeyFromFile(eng, aFileName.c_str(), aKeySerial, &pubKey, nullptr);
+
+	if (0 == rc) {
+		mPublicKeys.insert(std::pair<unsigned long, IPRIV_KEY>(pubKey.keyserial, pubKey));
+	}
+
+    return rc;
 }
 
 //---------------------------------------------------------------------------------------
@@ -116,7 +140,7 @@ void IprivKey::OpenPublicKeyFromFile(const Nan::FunctionCallbackInfo<v8::Value> 
     	return;
     }
 
-    std::string filePath = *v8::String::Utf8Value(info[0]->ToString());
+    key->mPublicKeyPath = *v8::String::Utf8Value(info[0]->ToString());
     uint32_t serial = info[1]->Uint32Value();
 
     if (serial == 0) {
@@ -124,78 +148,69 @@ void IprivKey::OpenPublicKeyFromFile(const Nan::FunctionCallbackInfo<v8::Value> 
     	return;
     }
 
-//    std::cerr << "file: " << filePath << "\npassword:" << password << std::endl << "key: " << key << "\n";
-
-	int rc = Crypt_OpenPublicKeyFromFile(key->eng, filePath.c_str(), serial, &(key->mKey), nullptr);
+    int rc = key->OpenPublicKeyFromFile(key->mPublicKeyPath, serial);
 
     std::cerr << "openPublic = " << rc << std::endl;
     // std::cerr << "file: " << filePath << "password:" << password << std::endl << "RC=" << rc << std::endl;
 
 	info.GetReturnValue().Set(Nan::New(rc));
 }
+
+
 //---------------------------------------------------------------------------------------
-class GetBuffer
+int Crypt_FindPublicKey_Func(unsigned long keyserial, IPRIV_KEY * key, char * /*info*/,int /*info_len*/ )
 {
-	const v8::Local<Value> & mValue;
-	char * mBuffer;
-	int mLength;
+	return CRYPT_ERR_FILE_NOT_FOUND;
+}
 
-	v8::String::Utf8Value * mStringValue;
+//---------------------------------------------------------------------------------------
+void IprivKey::Verify(const Nan::FunctionCallbackInfo<v8::Value> & info)
+{
+	IprivKey * key = ObjectWrap::Unwrap<IprivKey>(info.Holder());
 
-public:
-	//---------------------------------------------------------------------------------------
-	explicit GetBuffer(const v8::Local<Value> & aValue) :
-		mValue(aValue), mBuffer(nullptr), mLength(0), mStringValue(nullptr)
-	{
-//	    std::string inType = *v8::String::Utf8Value(aValue->ToObject()->ObjectProtoToString());
-//	    printf("in object type: %s\n", inType.c_str());
+    if (info.Length() < 2) {
+    	Nan::ThrowTypeError("Wrong number of arguments");
+    	return;
+    }
 
-		if (aValue->IsUint8Array())
-		{
-		    Uint8Array * in = Uint8Array::Cast(*aValue);
+    GetBuffer in(info[0]);
+    GetBuffer out(info[1]);
 
-		    if (in->HasBuffer())
-			{
-		    	mBuffer = (char *)in->Buffer()->GetContents().Data() + in->ByteOffset();
-		    	mLength = in->ByteLength();
-			}
-		}
-		else if (aValue->IsString())
-		{
-			mStringValue = new v8::String::Utf8Value(aValue);
-			mBuffer = **mStringValue;
-			mLength = mStringValue->length();
-		}
+    if (!in.isValid() || !out.isValid()) {
+		Nan::ThrowTypeError("Wrong type of arguments");
+    	return;
+    }
+
+    //
+    unsigned long keySerial = 0;
+    int rc = Crypt_Verify2(in.getPtr(), in.getLength(), Crypt_FindPublicKey_Func, 0, 0, &keySerial);
+
+    IPRIV_KEY pubKey;
+    if (key->mPublicKeys.find(keySerial) == key->mPublicKeys.end()) {
+        rc = key->OpenPublicKeyFromFile(key->mPublicKeyPath, keySerial);
+        if (rc) {
+            Nan::ThrowTypeError("Wrong type of arguments");
+            return;
+        }
+    }
+    
+    pubKey = key->mPublicKeys[keySerial];
+
+    int size = out.getLength();
+    const char * outPtr = in.getPtr();
+	rc = Crypt_Verify(in.getPtr(), in.getLength(), &outPtr, &size, &pubKey);
+
+	if (rc < 0) {
+		Nan::ThrowError("Crypt_Verify error");
+		return;
 	}
+    else {
+        memset(out.getPtr(), 0, out.getLength());
+        memcpy(out.getPtr(), outPtr, size);
+    }
 
-	//---------------------------------------------------------------------------------------
-	virtual ~GetBuffer()
-	{
-		if (mStringValue)
-		{
-			delete mStringValue;
-			mStringValue = nullptr;
-		}
-	}
-
-	//---------------------------------------------------------------------------------------
-	bool isValid() const
-	{
-		return mBuffer && mLength > 0;
-	}
-
-	//---------------------------------------------------------------------------------------
-	char * getPtr() const
-	{
-		return mBuffer;
-	}
-
-	//---------------------------------------------------------------------------------------
-	int getLength() const
-	{
-		return mLength;
-	}
-};
+	info.GetReturnValue().Set(Nan::New(rc));
+}
 
 //---------------------------------------------------------------------------------------
 void IprivKey::Sign(const Nan::FunctionCallbackInfo<v8::Value> & info)
@@ -219,10 +234,9 @@ void IprivKey::Sign(const Nan::FunctionCallbackInfo<v8::Value> & info)
 
 //	printf("OUT BUFFER SIZE=%d\n\n", outBufferSize);
 
-	int rc = Crypt_SignEx(in.getPtr(), in.getLength(), out.getPtr(), out.getLength(), &key->mKey, key->alg);
+	int rc = Crypt_SignEx(in.getPtr(), in.getLength(), out.getPtr(), out.getLength(), &key->mSecretKey, key->alg);
 
-	if (rc < 0)
-	{
+	if (rc < 0) {
 		Nan::ThrowError("Crypt_SignEx error");
 		return;
 	}

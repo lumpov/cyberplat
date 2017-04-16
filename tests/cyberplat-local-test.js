@@ -22,7 +22,6 @@ describe("Cyberplat local", function() {
 
     server.listen(port);
 
-
     it("check create", function(done) {
         var cyberplat = new Cyberplat({
             crypto: {

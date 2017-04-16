@@ -57,6 +57,23 @@ var Cyberplat = function (ops) {
         "OP: " + ops.settings.OP
         ].join(", ");
 
+    var twoDigitString = function(v) {
+        return (v < 10 ? "0" : "") + v;
+    };
+
+    var generateNewSession = function() {
+        var date = new Date();
+        
+        var month = twoDigitString(date.getMonth() + 1);
+        var day = twoDigitString(date.getDate());
+        var hour = twoDigitString(date.getHours());
+        var min = twoDigitString(date.getMinutes());
+        var sec = twoDigitString(date.getSeconds());
+        
+        return date.getFullYear() + month + day + hour + min + sec +
+            Math.random().toString(10).substr(2, 3);
+    };
+
     var go = function(type, providerid, obj, callback) {
         var url = null;
 
@@ -135,7 +152,8 @@ var Cyberplat = function (ops) {
         payStatus: payStatus,
         //limitStatus: limitStatus,
         //fillStatus: fillStatus,
-        ERRORS: errors
+        ERRORS: errors,
+        generateNewSession: generateNewSession
     };
 };
 
