@@ -31,6 +31,7 @@ void IprivKey::Init(v8::Local<v8::Object> exports)
 	// Prototype
 	Nan::SetPrototypeMethod(tpl, "OpenSecretKeyFromFile", OpenSecretKeyFromFile);
 	Nan::SetPrototypeMethod(tpl, "Sign", Sign);
+	Nan::SetPrototypeMethod(tpl, "OpenPublicKeyFromFile", OpenPublicKeyFromFile);
 
 	constructor.Reset(tpl->GetFunction());
 	exports->Set(Nan::New("IprivKey").ToLocalChecked(), tpl->GetFunction());
@@ -100,6 +101,38 @@ void IprivKey::OpenSecretKeyFromFile(const Nan::FunctionCallbackInfo<v8::Value> 
 	info.GetReturnValue().Set(Nan::New(rc));
 }
 
+//---------------------------------------------------------------------------------------
+void IprivKey::OpenPublicKeyFromFile(const Nan::FunctionCallbackInfo<v8::Value> & info)
+{
+	IprivKey * key = ObjectWrap::Unwrap<IprivKey>(info.Holder());
+
+    if (info.Length() < 2) {
+    	Nan::ThrowTypeError("Wrong number of arguments");
+    	return;
+    }
+
+    if (!info[0]->IsString()) {
+    	Nan::ThrowTypeError("Wrong argument 0");
+    	return;
+    }
+
+    std::string filePath = *v8::String::Utf8Value(info[0]->ToString());
+    uint32_t serial = info[1]->Uint32Value();
+
+    if (serial == 0) {
+    	Nan::ThrowTypeError("Wrong arguments 1");
+    	return;
+    }
+
+//    std::cerr << "file: " << filePath << "\npassword:" << password << std::endl << "key: " << key << "\n";
+
+	int rc = Crypt_OpenPublicKeyFromFile(key->eng, filePath.c_str(), serial, &(key->mKey), nullptr);
+
+    std::cerr << "openPublic = " << rc << std::endl;
+    // std::cerr << "file: " << filePath << "password:" << password << std::endl << "RC=" << rc << std::endl;
+
+	info.GetReturnValue().Set(Nan::New(rc));
+}
 //---------------------------------------------------------------------------------------
 class GetBuffer
 {

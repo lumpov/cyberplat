@@ -27,7 +27,9 @@ describe("Cyberplat local", function() {
         var cyberplat = new Cyberplat({
             crypto: {
                 secretKey: './tests/secret.key',
-                secretPhrase: '1111111111'   //password
+                secretPhrase: '1111111111',   //password
+	            publicKey: "./tests/pubkeys.key",
+	            publicSerial: 64182       // serial number of cyberplat key
             },
             settings: {
                 SD: 17031,

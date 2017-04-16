@@ -7,9 +7,10 @@ describe("Cyberplat", function() {
     it("check create", function(done) {
         var cyberplat = new Cyberplat({
             crypto: {
-                libPath: './tests/libipriv',
                 secretKey: './tests/secret.key',
-                secretPhrase: '1111111111'   //password
+                secretPhrase: '1111111111',   //password
+                publicKey: './tests/pubkeys.key',
+                publicSerial: 64182       // serial number of cyberplat key
             },
             settings: {
                 AP: 1,
@@ -53,7 +54,9 @@ describe("Cyberplat", function() {
             crypto: {
                 libPath: './tests/libipriv',
                 secretKey: './tests/secret.key',
-                secretPhrase: '1111111111'   //password
+                secretPhrase: '1111111111',   //password
+	            publicKey: "./tests/pubkeys.key",
+	            publicSerial: 64182       // serial number of cyberplat key
             },
             settings: {
                 SD: 17031,

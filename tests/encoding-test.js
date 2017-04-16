@@ -9,8 +9,10 @@ var iconvUtf8ToWin1251 = new Iconv('UTF-8', 'windows-1251');
 var iconvWin1251ToUtf8 = new Iconv('windows-1251', 'UTF-8');
 
 var ops_crypto = {
-  secretKey: './tests/secret.key',    //path to secret.key
-  secretPhrase: '1111111111'  //secret password of secret key
+	secretKey: './tests/secret.key',  //path to secret.key
+	secretPhrase: '1111111111',       //secret password of secret key
+	publicKey: "./tests/pubkeys.key",
+	publicSerial: 64182               //serial number of cyberplat key
 }
 
 var crypto = new Crypto(ops_crypto, console);
