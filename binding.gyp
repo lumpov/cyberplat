@@ -5,16 +5,12 @@
 	"targets": [
 		{
 			"target_name": "iprivpg",
-			"conditions": [
-				["node_version[0] == '7'", {
-					"cflags": [
-#						"-O2",
-#						"-fno-stack-protector",
-#						"-fPIC",
-#						"-fno-exceptions",
-#						"-fno-rtti" 
-					],
-				}]
+			"cflags": [
+				"-O2",
+				"-fno-stack-protector",
+				"-fPIC",
+				"-fno-exceptions",
+				"-fno-rtti" 
 			],
 			"include_dirs": [
 				"<!(node -e \"require('nan')\")",
