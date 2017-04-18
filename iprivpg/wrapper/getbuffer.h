@@ -13,11 +13,12 @@ class GetBuffer
 public:
 	//---------------------------------------------------------------------------------------
 	explicit GetBuffer(const v8::Local<v8::Value> & aValue) :
-		mValue(aValue), mBuffer(nullptr), mLength(0), mStringValue(nullptr)
+		mValue(aValue), mBuffer(0), mLength(0), mStringValue(0)
 	{
 //	    std::string inType = *v8::String::Utf8Value(aValue->ToObject()->ObjectProtoToString());
 //	    printf("in object type: %s\n", inType.c_str());
 
+#if V8_MAJOR_VERSION > 0 || V8_MINOR_VERSION > 10
 		if (aValue->IsUint8Array())
 		{
 			v8::Uint8Array * in = v8::Uint8Array::Cast(*aValue);
@@ -28,7 +29,9 @@ public:
 		    	mLength = in->ByteLength();
 			}
 		}
-		else if (aValue->IsString())
+		else 
+#endif            
+            if (aValue->IsString())
 		{
 			mStringValue = new v8::String::Utf8Value(aValue);
 			mBuffer = **mStringValue;
@@ -42,7 +45,7 @@ public:
 		if (mStringValue)
 		{
 			delete mStringValue;
-			mStringValue = nullptr;
+			mStringValue = 0;
 		}
 	}
 

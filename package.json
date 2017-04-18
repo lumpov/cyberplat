@@ -42,7 +42,8 @@
     "qs-iconv": "^1.0.4",
     "restler": "^3.4.0",
     "tracer": "^0.8.7",
-    "bindings": "^1.2.1"
+    "bindings": "^1.2.1",
+    "commander": "^2.9.0"
   },
   "gypfile": true
 }

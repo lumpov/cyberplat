@@ -116,7 +116,7 @@ int IprivKey::OpenPublicKeyFromFile(const std::string & aFileName, unsigned long
 {
     IPRIV_KEY pubKey;
 
-	int rc = Crypt_OpenPublicKeyFromFile(eng, aFileName.c_str(), aKeySerial, &pubKey, nullptr);
+	int rc = Crypt_OpenPublicKeyFromFile(eng, aFileName.c_str(), aKeySerial, &pubKey, 0);
 
 	if (0 == rc) {
 		mPublicKeys.insert(std::pair<unsigned long, IPRIV_KEY>(pubKey.keyserial, pubKey));
