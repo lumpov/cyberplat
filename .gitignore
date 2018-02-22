@@ -3,3 +3,5 @@ node_modules
 *.a
 *.mk
 *.gypi
+build/
+package-lock.json

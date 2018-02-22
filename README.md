@@ -12,6 +12,7 @@ nodejs модуль для проведения платежей через се
 
 > npm install  nbind autogypi node-gyp
 > npm run install
+> npm install
 > npm run test
 > npm install cyberplat 
 

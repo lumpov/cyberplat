@@ -28,7 +28,7 @@
 				  "IDEA32"
 			],
 			"sources": [
-				"iprivpg/wrapper/ipriv.cpp",
+				"iprivpg/wrapper/wr_ipriv.cpp",
 				"iprivpg/src/libipriv.cpp",
 				"iprivpg/src/ipriv.cpp",
 				"iprivpg/src/armor.cpp",

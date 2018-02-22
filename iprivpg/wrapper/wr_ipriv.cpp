@@ -1,7 +1,7 @@
 
 #include <string.h>
 
-#include "ipriv.h"
+#include "wr_ipriv.h"
 #include "getbuffer.h"
 
 using namespace v8;
