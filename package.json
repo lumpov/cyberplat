@@ -1,0 +1,51 @@
+{
+  "name": "cyberplat",
+  "version": "0.0.3",
+  "description": "node module for Cyberplat API",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "node-gyp": "node-gyp",
+    "emcc-path": "emcc-path",
+    "copyasm": "copyasm",
+    "ndts": "ndts",
+    "install": "node-gyp configure build",
+    "test": "mocha --reporter spec tests/*-test.js",
+    "crypto-test": "mocha --reporter spec tests/crypto-test.js",
+    "encoding-test": "mocha --reporter spec tests/encoding-test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antirek/cyberplat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/antirek/cyberplat/issues"
+  },
+  "homepage": "https://github.com/antirek/cyberplat#readme",
+  "devDependencies": {
+    "cheerio": "^0.22.0",
+    "mocha": "^3.2.0",
+    "moment": "^2.17.1",
+    "randomstring": "^1.1.5"
+  },
+  "dependencies": {
+    "autogypi": "^0.2.2",
+    "bindings": "^1.2.1",
+    "commander": "^2.9.0",
+    "iconv": "^2.2.1",
+    "joi": "^10.0.5",
+    "mocha": "^3.2.0",
+    "nan": "^2.8.0",
+    "nbind": "^0.3.14",
+    "node-gyp": "^3.6.2",
+    "qs": "^6.3.0",
+    "qs-iconv": "^1.0.4",
+    "restler": "^3.4.0",
+    "tracer": "^0.8.7"
+  },
+  "gypfile": true
+}

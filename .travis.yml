@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+- '6.9'
+- '7.3'
+os:
+- linux
+sudo:
+- true
+dist:
+- precise
+env:
+- CXX=g++-4.8
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+deploy:
+  provider: npm
+  email: antirek@yandex.ru
+  api_key:
+    secure: bOWUIj3fLh6pI6U7Z9+IYkeNmbhrMIPJ7sBpjyRiI1s51fRApZpqwtsJCerTUnPOQwvFQm0Wy7df/1cgyRyq/F2VrPGkKl7ddy9SqaT7wsZpguoNqb3WkA7Ll9XvKGalRDOSDx30Q9zW8IKfMBCbGIvRlr+b3GrhU6mmJ23yqKPO0HJ2V752XyoJos4NGcBbsYadHHzSC093pmn8BRDMnnTvFJ0z5Wy0gQpERXsI5ahEFmBE2kEt0+aR+OHnHTkrd0Mz2cV0ekxfF+Y6eAz2HOt4tkg9X1u/MrgYls6E4k77AnqCxI9LzOPiDeTwDHOXvBI0apu1kfbP4x1PZIdI38whXWXVNs1b+R0LuaL1wabF3Slu3DJCHDWAX0xXJQTyG6c5Vg4bTzEd9dGo1Pv/h0BV6g3RwGIwTrMwliv9RYwGb4xwMTwNodZt1dqstafrFB+OUTON7hDg7Nl3Z+UaEN447Osh5Y53rYiqzu56fI32Ol2zVLC80i50Rmf4crniQBhQjHHOyloFO+9GDrhp/2VzwMn6RedQrMs36pT0lTQwjts/koYe1dKr/eVsq4c4UFYR7Ik4NXRQPgxY+lQsLHQjmgPruNI3If4b+PwYb0v9wmBGpn+8sTGerzV1Ck0vBENpA9ODElpVYyD84DAjzcnr0BLG0xgx0iunETo2vgA=
+  on:
+    repo: antirek/cyberplat

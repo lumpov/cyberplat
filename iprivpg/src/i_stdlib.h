@@ -54,7 +54,7 @@ typedef unsigned __int32 uint32;
 int rsaref_mpicpy(const unsigned char* src, int nsrc, unsigned char* dst, int ndst);
 void rsaref_dump(void *src, int nsrc);
 
-#if defined(_WIN32)
+#if defined(_WIN32) && _MSC_VER <= 1600
 #define vsnprintf	__vsnprintf
 #define snprintf	__snprintf
 #else

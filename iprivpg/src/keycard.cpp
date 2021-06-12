@@ -122,7 +122,7 @@ int CryptWriteKeyCard(char *dst, int ndst, unsigned long serial, const char *use
 }
 
 /*
-// записать карточку ключа
+// Р·Р°РїРёСЃР°С‚СЊ РєР°СЂС‚РѕС‡РєСѓ РєР»СЋС‡Р°
 int writeKeyFile(const char *keyfilename, long keySerial, const char *userid)
 {
 	int rc, len;
